@@ -1,60 +1,49 @@
 // app/tuitions/page.tsx
-"use client";
+"use client"
 
-import { useEffect, useState } from "react";
-import { useUser } from "@clerk/nextjs";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { 
-  BookOpen, 
-  Plus, 
-  Users, 
-  ArrowLeft, 
-  Calendar,
-  DollarSign,
-  MoreVertical,
-  Edit,
-  Archive,
-  Trash2
-} from "lucide-react";
-import { supabase } from "@/lib/supabase";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react"
+import { useUser } from "@clerk/nextjs"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { BookOpen, Plus, Users, ArrowLeft, Calendar, DollarSign, MoreVertical, Archive } from "lucide-react"
+import { supabase } from "@/lib/supabase"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 type TuitionWithStats = {
-  id: string;
-  name: string;
-  subject: string;
-  description?: string;
-  status: 'active' | 'archived';
-  created_at: string;
-  studentCount: number;
-  unpaidFees: number;
-  lastClassDate?: string;
-};
+  id: string
+  name: string
+  subject: string
+  description?: string
+  status: "active" | "archived"
+  created_at: string
+  studentCount: number
+  unpaidFees: number
+  lastClassDate?: string
+}
 
 export default function TuitionsPage() {
-  const router = useRouter();
-  const { user, isLoaded } = useUser();
-  const [tuitions, setTuitions] = useState<TuitionWithStats[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'active' | 'archived'>('active');
+  const router = useRouter()
+  const { user, isLoaded } = useUser()
+  const [tuitions, setTuitions] = useState<TuitionWithStats[]>([])
+  const [loading, setLoading] = useState(true)
+  const [activeTab, setActiveTab] = useState<"active" | "archived">("active")
 
   useEffect(() => {
     if (isLoaded && user) {
-      fetchTuitions();
+      fetchTuitions()
     }
-  }, [isLoaded, user, activeTab]);
+  }, [isLoaded, user, activeTab])
 
   const fetchTuitions = async () => {
     try {
-      setLoading(true);
+      setLoading(true)
 
       // Get user's tuitions with student count and fee stats
       const { data, error } = await supabase
-        .from('tuitions')
+        .from("tuitions")
         .select(`
           id,
           name,
@@ -72,84 +61,80 @@ export default function TuitionsPage() {
             date
           )
         `)
-        .eq('status', activeTab)
-        .order('created_at', { ascending: false });
+        .eq("status", activeTab)
+        .order("created_at", { ascending: false })
 
-      if (error) throw error;
+      if (error) throw error
 
       // Process the data to calculate stats
-      const tuitionsWithStats: TuitionWithStats[] = data?.map(tuition => {
-        const studentCount = tuition.students?.length || 0;
-        
-        // Count unpaid fees
-        const unpaidFees = tuition.students?.reduce((count, student) => {
-          const unpaidCount = student.fee_records?.filter(fee => fee.status === 'due').length || 0;
-          return count + unpaidCount;
-        }, 0) || 0;
+      const tuitionsWithStats: TuitionWithStats[] =
+        data?.map((tuition) => {
+          const studentCount = tuition.students?.length || 0
 
-        // Get last class date
-        const lastClassDate = tuition.class_logs?.[0]?.date || undefined;
+          // Count unpaid fees
+          const unpaidFees =
+            tuition.students?.reduce((count, student) => {
+              const unpaidCount = student.fee_records?.filter((fee) => fee.status === "due").length || 0
+              return count + unpaidCount
+            }, 0) || 0
 
-        return {
-          id: tuition.id,
-          name: tuition.name,
-          subject: tuition.subject,
-          description: tuition.description,
-          status: tuition.status,
-          created_at: tuition.created_at,
-          studentCount,
-          unpaidFees,
-          lastClassDate,
-        };
-      }) || [];
+          // Get last class date
+          const lastClassDate = tuition.class_logs?.[0]?.date || undefined
 
-      setTuitions(tuitionsWithStats);
+          return {
+            id: tuition.id,
+            name: tuition.name,
+            subject: tuition.subject,
+            description: tuition.description,
+            status: tuition.status,
+            created_at: tuition.created_at,
+            studentCount,
+            unpaidFees,
+            lastClassDate,
+          }
+        }) || []
+
+      setTuitions(tuitionsWithStats)
     } catch (error) {
-      console.error('Error fetching tuitions:', error);
+      console.error("Error fetching tuitions:", error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const handleArchive = async (tuitionId: string) => {
     try {
-      const { error } = await supabase
-        .from('tuitions')
-        .update({ status: 'archived' })
-        .eq('id', tuitionId);
+      const { error } = await supabase.from("tuitions").update({ status: "archived" }).eq("id", tuitionId)
 
-      if (error) throw error;
+      if (error) throw error
 
       // Refresh the list
-      fetchTuitions();
+      fetchTuitions()
     } catch (error) {
-      console.error('Error archiving tuition:', error);
+      console.error("Error archiving tuition:", error)
     }
-  };
+  }
 
   const handleRestore = async (tuitionId: string) => {
     try {
-      const { error } = await supabase
-        .from('tuitions')
-        .update({ status: 'active' })
-        .eq('id', tuitionId);
+      const { error } = await supabase.from("tuitions").update({ status: "active" }).eq("id", tuitionId)
 
-      if (error) throw error;
+      if (error) throw error
 
       // Refresh the list
-      fetchTuitions();
+      fetchTuitions()
     } catch (error) {
-      console.error('Error restoring tuition:', error);
+      console.error("Error restoring tuition:", error)
     }
-  };
+  }
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric'
-    });
-  };
+    return new Date(dateString).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    })
+  }
 
   if (!isLoaded || loading) {
     return (
@@ -161,7 +146,7 @@ export default function TuitionsPage() {
           ))}
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -189,10 +174,12 @@ export default function TuitionsPage() {
         </div>
 
         {/* Tabs */}
-        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'active' | 'archived')}>
+        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as "active" | "archived")}>
           <TabsList className="mb-6">
-            <TabsTrigger value="active">Active ({tuitions.filter(t => t.status === 'active').length})</TabsTrigger>
-            <TabsTrigger value="archived">Archived ({tuitions.filter(t => t.status === 'archived').length})</TabsTrigger>
+            <TabsTrigger value="active">Active ({tuitions.filter((t) => t.status === "active").length})</TabsTrigger>
+            <TabsTrigger value="archived">
+              Archived ({tuitions.filter((t) => t.status === "archived").length})
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="active">
@@ -227,12 +214,12 @@ export default function TuitionsPage() {
                             <p className="text-sm text-muted-foreground">{tuition.subject}</p>
                           </div>
                         </div>
-                        <Button 
-                          variant="ghost" 
-                          size="icon" 
+                        <Button
+                          variant="ghost"
+                          size="icon"
                           className="opacity-0 group-hover:opacity-100 transition-opacity"
                           onClick={(e) => {
-                            e.stopPropagation();
+                            e.stopPropagation()
                             // Handle menu actions
                           }}
                         >
@@ -240,13 +227,11 @@ export default function TuitionsPage() {
                         </Button>
                       </div>
                       {tuition.description && (
-                        <p className="text-sm text-muted-foreground line-clamp-2 mt-2">
-                          {tuition.description}
-                        </p>
+                        <p className="text-sm text-muted-foreground line-clamp-2 mt-2">{tuition.description}</p>
                       )}
                     </CardHeader>
-                    <CardContent 
-                      className="space-y-4"
+                    <CardContent
+                      className="space-y-4 cursor-pointer"
                       onClick={() => router.push(`/tuitions/${tuition.id}`)}
                     >
                       {/* Stats */}
@@ -273,7 +258,7 @@ export default function TuitionsPage() {
                       {/* Actions */}
                       <div className="flex gap-2 pt-2">
                         <Link href={`/tuitions/${tuition.id}`} className="flex-1">
-                          <Button variant="outline" size="sm" className="w-full">
+                          <Button variant="outline" size="sm" className="w-full bg-transparent">
                             Manage
                           </Button>
                         </Link>
@@ -301,9 +286,7 @@ export default function TuitionsPage() {
                 <CardContent>
                   <Archive className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
                   <h3 className="text-lg font-medium mb-2">No archived tuitions</h3>
-                  <p className="text-muted-foreground">
-                    Archived tuitions will appear here
-                  </p>
+                  <p className="text-muted-foreground">Archived tuitions will appear here</p>
                 </CardContent>
               </Card>
             ) : (
@@ -325,9 +308,9 @@ export default function TuitionsPage() {
                     </CardHeader>
                     <CardContent>
                       <div className="flex gap-2">
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
+                        <Button
+                          variant="outline"
+                          size="sm"
                           onClick={() => handleRestore(tuition.id)}
                           className="flex-1"
                         >
@@ -350,7 +333,7 @@ export default function TuitionsPage() {
 
       {/* Floating Action Button */}
       <Link href="/tuitions/new">
-        <Button 
+        <Button
           className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-shadow z-50 md:hidden"
           size="icon"
         >
@@ -358,5 +341,5 @@ export default function TuitionsPage() {
         </Button>
       </Link>
     </div>
-  );
+  )
 }
