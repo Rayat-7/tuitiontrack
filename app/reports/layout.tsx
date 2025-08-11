@@ -1,7 +1,7 @@
 import type React from "react"
 import Sidebar from "@/components/Sidebar"
 
-export default function DashboardLayout({
+export default function ReportsLayout({
   children,
 }: {
   children: React.ReactNode

@@ -6,6 +6,8 @@ import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { ThemeToggle } from "@/components/theme-toggle"
+import { UserButton, useUser } from "@clerk/nextjs"
 import {
   LayoutDashboard,
   BookOpen,
@@ -103,6 +105,7 @@ interface SidebarProps {
 export default function Sidebar({ className }: SidebarProps) {
   const [isOpen, setIsOpen] = useState(false)
   const pathname = usePathname()
+  const { user } = useUser()
 
   const isActive = (href: string) => {
     if (href === "/dashboard") {
@@ -145,9 +148,27 @@ export default function Sidebar({ className }: SidebarProps) {
                 TuitionTrack
               </span>
             </Link>
-            <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setIsOpen(false)}>
-              <X className="h-4 w-4" />
-            </Button>
+            <div className="flex items-center gap-2">
+              <ThemeToggle />
+              <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setIsOpen(false)}>
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+
+          {/* User Profile Section */}
+          <div className="px-6 py-4 border-b border-border/50">
+            <div className="flex items-center gap-3">
+              <UserButton afterSignOutUrl="/" />
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-foreground truncate">
+                  {user?.firstName || user?.username || "User"}
+                </p>
+                <p className="text-xs text-muted-foreground truncate">
+                  {user?.primaryEmailAddress?.emailAddress || ""}
+                </p>
+              </div>
+            </div>
           </div>
 
           {/* Navigation */}
@@ -161,9 +182,9 @@ export default function Sidebar({ className }: SidebarProps) {
                     href={item.href}
                     onClick={() => setIsOpen(false)}
                     className={cn(
-                      "group flex items-center rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200 hover:scale-[1.02]",
+                      "group flex items-center rounded-2xl px-3 py-3 text-sm font-medium transition-all duration-200 hover:scale-[1.02]",
                       active
-                        ? "bg-gradient-to-r from-primary/10 to-primary/5 text-primary border border-primary/20 shadow-sm"
+                        ? "bg-gradient-to-r from-primary to-primary/90 text-primary-foreground border border-primary/20 shadow-sm"
                         : "text-muted-foreground hover:text-foreground hover:bg-accent/50",
                     )}
                   >
@@ -171,15 +192,15 @@ export default function Sidebar({ className }: SidebarProps) {
                       className={cn(
                         "mr-3 flex h-8 w-8 items-center justify-center rounded-lg transition-all duration-200",
                         active
-                          ? `bg-gradient-to-br ${item.gradient} text-white shadow-lg`
-                          : "bg-muted/50 group-hover:bg-muted",
+                          ? "bg-white/20 text-white shadow-lg"
+                          : `bg-gradient-to-br ${item.gradient} text-white group-hover:shadow-lg`,
                       )}
                     >
                       <item.icon className="h-4 w-4" />
                     </div>
                     <span className="flex-1">{item.name}</span>
                     {item.badge && (
-                      <Badge variant={active ? "default" : "secondary"} className="ml-auto h-5 px-2 text-xs">
+                      <Badge variant={active ? "secondary" : "outline"} className="ml-auto h-5 px-2 text-xs">
                         {item.badge}
                       </Badge>
                     )}

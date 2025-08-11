@@ -1,46 +1,133 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import Navbar from "@/components/Navbar";
-import { ClerkProvider } from "@clerk/nextjs";
-import { Toaster } from "sonner";
+import type React from "react"
+import type { Metadata } from "next"
+import { Plus_Jakarta_Sans, Lora, IBM_Plex_Mono } from "next/font/google"
+import "./globals.css"
+import { ClerkProvider } from "@clerk/nextjs"
+import { Toaster } from "sonner"
+import { ThemeProvider } from "@/components/theme-provider"
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
-});
+  variable: "--font-sans",
+  weight: ["300", "400", "600", "700"],
+  display: "swap",
+})
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const lora = Lora({
   subsets: ["latin"],
-});
+  variable: "--font-serif",
+  weight: ["400", "700"],
+  display: "swap",
+})
+
+const ibmMono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  weight: ["400", "500", "700"],
+  display: "swap",
+})
 
 export const metadata: Metadata = {
   title: "TuitionTrack - Manage Your Tuitions Like a Pro",
-  description: "Track students, manage attendance, record daily logs, and handle fees - all in one beautiful platform designed for tutors in Bangladesh.",
-};
+  description:
+    "Track students, manage attendance, record daily logs, and handle fees - all in one beautiful platform designed for tutors in Bangladesh.",
+}
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <ClerkProvider appearance={{
-          variables: {
-            colorPrimary: "#7033ff",}}}>
-        <Navbar/>
-        {children}
-        <Toaster position="top-center" />
-        </ClerkProvider>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${plusJakarta.variable} ${lora.variable} ${ibmMono.variable} font-sans antialiased`}>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          <ClerkProvider
+            appearance={{
+              variables: {
+                colorPrimary: "#7033ff",
+              },
+            }}
+          >
+            {children}
+            <Toaster position="top-center" />
+          </ClerkProvider>
+        </ThemeProvider>
       </body>
     </html>
-  );
+  )
 }
+
+
+
+
+
+
+// import type { Metadata } from "next";
+// import { Geist, Geist_Mono } from "next/font/google";
+// import "./globals.css";
+// import Navbar from "@/components/Navbar";
+// import { ClerkProvider } from "@clerk/nextjs";
+// import { Toaster } from "sonner";
+// import { Plus_Jakarta_Sans, Lora, IBM_Plex_Mono } from 'next/font/google';
+// import Sidebar from "@/components/Sidebar";
+
+// const plusJakarta = Plus_Jakarta_Sans({
+//   subsets: ['latin'],
+//   variable: '--font-sans',
+//   weight: ['300','400','600','700'],
+//   display: 'swap'
+// });
+
+// const lora = Lora({
+//   subsets: ['latin'],
+//   variable: '--font-serif',
+//   weight: ['400','700'],
+//   display: 'swap'
+// });
+// const ibmMono = IBM_Plex_Mono({
+//   subsets: ['latin'],
+//   variable: '--font-mono',
+//   weight: ['400','500','700'],
+//   display: 'swap'
+// });
+// // const geistSans = Geist({
+// //   variable: "--font-geist-sans",
+// //   subsets: ["latin"],
+// // });
+
+// // const geistMono = Geist_Mono({
+// //   variable: "--font-geist-mono",
+// //   subsets: ["latin"],
+// // });
+
+// export const metadata: Metadata = {
+//   title: "TuitionTrack - Manage Your Tuitions Like a Pro",
+//   description: "Track students, manage attendance, record daily logs, and handle fees - all in one beautiful platform designed for tutors in Bangladesh.",
+// };
+
+// export default function RootLayout({
+//   children,
+// }: Readonly<{
+//   children: React.ReactNode;
+// }>) {
+//   return (
+//     <html lang="en">
+//       <body
+//         className={`${plusJakarta.variable} ${lora.variable} ${ibmMono.variable} antialiased`}
+//       >
+//         <ClerkProvider appearance={{
+//           variables: {
+//             colorPrimary: "#7033ff",}}}>
+//         <Navbar/>
+//         <Sidebar/>
+//         {children}
+//         <Toaster position="top-center" />
+//         </ClerkProvider>
+//       </body>
+//     </html>
+//   );
+// }
 
 
 
