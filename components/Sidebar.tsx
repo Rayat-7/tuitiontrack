@@ -22,6 +22,7 @@ import {
   FileText,
   Clock,
   Target,
+  PanelsRightBottom ,
 } from "lucide-react"
 
 const navigation = [
@@ -118,33 +119,42 @@ export default function Sidebar({ className }: SidebarProps) {
     <>
       {/* Mobile Menu Button */}
       <Button
+  variant="ghost"
+  size="icon"
+  className={`fixed top-6 left-4 z-50 md:hidden bg-background/80 backdrop-blur-sm border border-primary/20 shadow-lg ${isOpen ? 'hidden' : ''}`}
+  onClick={() => setIsOpen(!isOpen)}
+  aria-label={isOpen ? 'Close sidebar' : 'Open sidebar'}
+>
+  {isOpen ? <X className="h-5 w-5" /> : <PanelsRightBottom className="h-5 w-5 text-primary" />}
+</Button>
+      {/* <Button
         variant="ghost"
         size="icon"
-        className="fixed top-4 left-4 z-50 md:hidden bg-background/80 backdrop-blur-sm border shadow-lg"
+        className="fixed top-10 left-4 z-50 md:hidden bg-background/80 backdrop-blur-sm border shadow-lg"
         onClick={() => setIsOpen(!isOpen)}
       >
-        {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-      </Button>
+        {isOpen ? <X className="h-5 w-5 hidden" /> : <PanelsRightBottom  className="h-5 w-5 text-violet-400" />}
+      </Button> */}
 
       {/* Mobile Overlay */}
-      {isOpen && <div className="fixed inset-0 bg-black/50 z-40 md:hidden" onClick={() => setIsOpen(false)} />}
+      {isOpen && <div className="fixed inset-0  z-40 md:hidden" onClick={() => setIsOpen(false)} />}
 
       {/* Sidebar */}
       <div
         className={cn(
-          "fixed left-0 top-0 z-40 h-full w-72 transform bg-gradient-to-br from-background via-background to-accent/20 border-r border-border/50 backdrop-blur-xl transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:z-0",
+          "fixed left-0 top-0 z-40 h-full rounded-4xl w-72 transform bg-gradient-to-br from-background via-background to-accent/20 border-r  border-violet-500 backdrop-blur-xl transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:z-0",
           isOpen ? "translate-x-0" : "-translate-x-full",
           className,
         )}
       >
         <div className="flex h-full flex-col">
           {/* Header */}
-          <div className="flex h-16 items-center justify-between px-6 border-b border-border/50">
+          <div className="flex h-16 items-center justify-between px-6 ">
             <Link href="/dashboard" className="flex items-center space-x-2">
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center">
-                <Target className="h-4 w-4 text-primary-foreground" />
+                <Target className="h-3 w-3 text-primary-foreground" />
               </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
+              <span className="text-md font-bold bg-foreground bg-clip-text text-transparent">
                 TuitionTrack
               </span>
             </Link>
@@ -156,24 +166,11 @@ export default function Sidebar({ className }: SidebarProps) {
             </div>
           </div>
 
-          {/* User Profile Section */}
-          <div className="px-6 py-4 border-b border-border/50">
-            <div className="flex items-center gap-3">
-              <UserButton afterSignOutUrl="/" />
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-foreground truncate">
-                  {user?.firstName || user?.username || "User"}
-                </p>
-                <p className="text-xs text-muted-foreground truncate">
-                  {user?.primaryEmailAddress?.emailAddress || ""}
-                </p>
-              </div>
-            </div>
-          </div>
+         
 
           {/* Navigation */}
           <div className="flex-1 overflow-y-auto py-6">
-            <nav className="space-y-2 px-4">
+            <nav className="space-y-1 px-4">
               {navigation.map((item) => {
                 const active = isActive(item.href)
                 return (
@@ -182,7 +179,7 @@ export default function Sidebar({ className }: SidebarProps) {
                     href={item.href}
                     onClick={() => setIsOpen(false)}
                     className={cn(
-                      "group flex items-center rounded-2xl px-3 py-3 text-sm font-medium transition-all duration-200 hover:scale-[1.02]",
+                      "group flex items-center rounded-2xl px-3  text-sm font-medium transition-all duration-200 hover:scale-[1.02]",
                       active
                         ? "bg-gradient-to-r from-primary to-primary/90 text-primary-foreground border border-primary/20 shadow-sm"
                         : "text-muted-foreground hover:text-foreground hover:bg-accent/50",
@@ -193,7 +190,7 @@ export default function Sidebar({ className }: SidebarProps) {
                         "mr-3 flex h-8 w-8 items-center justify-center rounded-lg transition-all duration-200",
                         active
                           ? "bg-white/20 text-white shadow-lg"
-                          : `bg-gradient-to-br ${item.gradient} text-white group-hover:shadow-lg`,
+                          : ` text-black dark:text-white group-hover:shadow-lg`,
                       )}
                     >
                       <item.icon className="h-4 w-4" />
@@ -210,7 +207,7 @@ export default function Sidebar({ className }: SidebarProps) {
             </nav>
 
             {/* Quick Actions */}
-            <div className="mt-8 px-4">
+            <div className="mt-7  px-4">
               <h3 className="mb-3 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Quick Actions
               </h3>
@@ -220,13 +217,13 @@ export default function Sidebar({ className }: SidebarProps) {
                     key={action.name}
                     href={action.href}
                     onClick={() => setIsOpen(false)}
-                    className="group flex items-center rounded-xl px-3 py-2 text-sm font-medium text-muted-foreground transition-all duration-200 hover:scale-[1.02] hover:text-foreground hover:bg-accent/50"
+                    className="group flex items-center rounded-xl px-3  text-sm font-medium text-muted-foreground transition-all duration-200 hover:scale-[1.02] hover:text-foreground hover:bg-accent/50"
                   >
                     <div
                       className={cn(
-                        "mr-3 flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br transition-all duration-200 group-hover:shadow-lg",
-                        action.gradient,
-                        "text-white",
+                        "mr-3 flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br transition-all duration-200 group-hover:shadow-lg text-black dark:text-white",
+                        // action.gradient,
+                        // "text-white",
                       )}
                     >
                       <action.icon className="h-3.5 w-3.5" />
@@ -238,8 +235,23 @@ export default function Sidebar({ className }: SidebarProps) {
             </div>
           </div>
 
+           {/* User Profile Section */}
+          <div className="px-6 py-4 border-b border-border/50">
+            <div className="flex items-center gap-3">
+              <UserButton afterSignOutUrl="/" />
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-foreground truncate">
+                  {user?.firstName || user?.username || "User"}
+                </p>
+                <p className="text-xs text-muted-foreground truncate">
+                  {user?.primaryEmailAddress?.emailAddress || ""}
+                </p>
+              </div>
+            </div>
+          </div>
+
           {/* Footer */}
-          <div className="border-t border-border/50 p-4">
+          <div className="border-t border-border/50 p-2">
             <Link
               href="/settings"
               onClick={() => setIsOpen(false)}
