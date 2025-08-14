@@ -58,7 +58,7 @@ export default function TuitionsPage() {
             )
           ),
           class_logs(
-            date
+            class_date
           )
         `)
         .eq("status", activeTab)
@@ -79,7 +79,7 @@ export default function TuitionsPage() {
             }, 0) || 0
 
           // Get last class date
-          const lastClassDate = tuition.class_logs?.[0]?.date || undefined
+          const lastClassDate = tuition.class_logs?.[0]?.class_date || undefined
 
           return {
             id: tuition.id,
