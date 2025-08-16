@@ -14,6 +14,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
+
 import {
   ArrowLeft,
   BookOpen,
@@ -37,6 +38,8 @@ import { createClient } from '@supabase/supabase-js'
 import Link from "next/link"
 import { toast } from "sonner"
 import AddStudentModal from "@/components/AddStudentModal"
+import EditStudentModal from "@/components/EditStudentModal"
+import { EditTuitionModal } from "@/components/EditTuitionModal"
 
 // Create authenticated Supabase client
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
@@ -489,7 +492,11 @@ export default function TuitionDetailsPage() {
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">
             <Link href="/tuitions">
-              <Button variant="ghost" size="icon" className="bg-background/80 backdrop-blur-sm border shadow-sm">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="bg-background/80 backdrop-blur-sm border shadow-sm"
+              >
                 <ArrowLeft className="h-4 w-4" />
               </Button>
             </Link>
@@ -499,8 +506,14 @@ export default function TuitionDetailsPage() {
                   {tuition.name}
                 </h1>
                 <Badge
-                  variant={tuition.status === "active" ? "default" : "secondary"}
-                  className={tuition.status === "active" ? "bg-gradient-to-r from-green-500 to-emerald-500" : ""}
+                  variant={
+                    tuition.status === "active" ? "default" : "secondary"
+                  }
+                  className={
+                    tuition.status === "active"
+                      ? "bg-gradient-to-r from-green-500 to-emerald-500"
+                      : ""
+                  }
                 >
                   {tuition.status}
                 </Badge>
@@ -515,11 +528,14 @@ export default function TuitionDetailsPage() {
               {tuition.teaching_days && tuition.teaching_days.length > 0 && (
                 <p className="text-sm text-muted-foreground mt-1 flex items-center gap-1">
                   <CalendarIcon className="h-3 w-3" />
-                  {tuition.days_per_week} days/week: {getTeachingDaysDisplay(tuition.teaching_days)}
+                  {tuition.days_per_week} days/week:{" "}
+                  {getTeachingDaysDisplay(tuition.teaching_days)}
                 </p>
               )}
               {tuition.description && (
-                <p className="text-sm text-muted-foreground mt-1 max-w-2xl">{tuition.description}</p>
+                <p className="text-sm text-muted-foreground mt-1 max-w-2xl">
+                  {tuition.description}
+                </p>
               )}
             </div>
           </div>
@@ -533,7 +549,9 @@ export default function TuitionDetailsPage() {
             <CardContent className="p-4 relative">
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="text-lg font-bold text-blue-600">{stats.totalStudents}</div>
+                  <div className="text-lg font-bold text-blue-600">
+                    {stats.totalStudents}
+                  </div>
                   <p className="text-xs text-muted-foreground">Students</p>
                 </div>
                 <div className="p-1.5 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-600">
@@ -549,7 +567,9 @@ export default function TuitionDetailsPage() {
             <CardContent className="p-4 relative">
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="text-lg font-bold text-green-600">{stats.attendanceRate}%</div>
+                  <div className="text-lg font-bold text-green-600">
+                    {stats.attendanceRate}%
+                  </div>
                   <p className="text-xs text-muted-foreground">Attendance</p>
                 </div>
                 <div className="p-1.5 rounded-lg bg-gradient-to-br from-green-500 to-emerald-600">
@@ -565,7 +585,9 @@ export default function TuitionDetailsPage() {
             <CardContent className="p-4 relative">
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="text-lg font-bold text-red-600">{stats.unpaidFees}</div>
+                  <div className="text-lg font-bold text-red-600">
+                    {stats.unpaidFees}
+                  </div>
                   <p className="text-xs text-muted-foreground">Unpaid</p>
                 </div>
                 <div className="p-1.5 rounded-lg bg-gradient-to-br from-red-500 to-pink-600">
@@ -581,7 +603,9 @@ export default function TuitionDetailsPage() {
             <CardContent className="p-4 relative">
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="text-lg font-bold text-purple-600">{stats.recentClasses}</div>
+                  <div className="text-lg font-bold text-purple-600">
+                    {stats.recentClasses}
+                  </div>
                   <p className="text-xs text-muted-foreground">Classes</p>
                 </div>
                 <div className="p-1.5 rounded-lg bg-gradient-to-br from-purple-500 to-violet-600">
@@ -630,7 +654,10 @@ export default function TuitionDetailsPage() {
             <Card className="border-0 shadow-lg bg-gradient-to-br from-background to-accent/5">
               <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle className="text-xl">Students</CardTitle>
-                <AddStudentModal tuitionId={tuitionId} onStudentAdded={fetchTuitionDetails} />
+                <AddStudentModal
+                  tuitionId={tuitionId}
+                  onStudentAdded={fetchTuitionDetails}
+                />
               </CardHeader>
               <CardContent>
                 {students.length > 0 ? (
@@ -645,7 +672,9 @@ export default function TuitionDetailsPage() {
                             <Users className="h-6 w-6 text-blue-500" />
                           </div>
                           <div>
-                            <h3 className="font-medium text-lg">{student.name}</h3>
+                            <h3 className="font-medium text-lg">
+                              {student.name}
+                            </h3>
                             <div className="flex items-center gap-4 text-sm text-muted-foreground mt-1">
                               <span className="flex items-center gap-1">
                                 <GraduationCap className="h-3 w-3" />
@@ -681,7 +710,11 @@ export default function TuitionDetailsPage() {
                           >
                             Active
                           </Badge>
-                          <Button
+                          <EditStudentModal
+                            student={student}
+                            onStudentUpdated={fetchTuitionDetails}
+                          />
+                          {/* <Button
                             variant="ghost"
                             size="icon"
                             className="hover:bg-blue-500/10 hover:text-blue-600"
@@ -690,12 +723,14 @@ export default function TuitionDetailsPage() {
                             }}
                           >
                             <Edit className="h-4 w-4" />
-                          </Button>
+                          </Button> */}
                           <Button
                             variant="ghost"
                             size="icon"
                             className="hover:bg-red-500/10 hover:text-red-600"
-                            onClick={() => archiveStudent(student.id, student.name)}
+                            onClick={() =>
+                              archiveStudent(student.id, student.name)
+                            }
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
@@ -708,9 +743,16 @@ export default function TuitionDetailsPage() {
                     <div className="w-16 h-16 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
                       <Users className="h-8 w-8 text-blue-500" />
                     </div>
-                    <h3 className="font-medium mb-2 text-lg">No students yet</h3>
-                    <p className="text-muted-foreground mb-6">Add your first student to get started</p>
-                    <AddStudentModal tuitionId={tuitionId} onStudentAdded={fetchTuitionDetails} />
+                    <h3 className="font-medium mb-2 text-lg">
+                      No students yet
+                    </h3>
+                    <p className="text-muted-foreground mb-6">
+                      Add your first student to get started
+                    </p>
+                    <AddStudentModal
+                      tuitionId={tuitionId}
+                      onStudentAdded={fetchTuitionDetails}
+                    />
                   </div>
                 )}
               </CardContent>
@@ -731,7 +773,9 @@ export default function TuitionDetailsPage() {
                     onSelect={setSelectedDate}
                     className="rounded-md border-0"
                     modifiers={{
-                      classDay: classLogs.filter((log) => log.was_conducted).map((log) => new Date(log.class_date)),
+                      classDay: classLogs
+                        .filter((log) => log.was_conducted)
+                        .map((log) => new Date(log.class_date)),
                     }}
                     modifiersStyles={{
                       classDay: {
@@ -778,17 +822,27 @@ export default function TuitionDetailsPage() {
                             id="was_conducted"
                             checked={classLogForm.was_conducted}
                             onCheckedChange={(checked) =>
-                              setClassLogForm((prev) => ({ ...prev, was_conducted: checked as boolean }))
+                              setClassLogForm((prev) => ({
+                                ...prev,
+                                was_conducted: checked as boolean,
+                              }))
                             }
                           />
-                          <Label htmlFor="was_conducted">Class was conducted</Label>
+                          <Label htmlFor="was_conducted">
+                            Class was conducted
+                          </Label>
                         </div>
                         <div>
                           <Label htmlFor="topic">Topic Covered</Label>
                           <Input
                             id="topic"
                             value={classLogForm.topic_covered}
-                            onChange={(e) => setClassLogForm((prev) => ({ ...prev, topic_covered: e.target.value }))}
+                            onChange={(e) =>
+                              setClassLogForm((prev) => ({
+                                ...prev,
+                                topic_covered: e.target.value,
+                              }))
+                            }
                             placeholder="What topic was covered in this class?"
                           />
                         </div>
@@ -797,21 +851,33 @@ export default function TuitionDetailsPage() {
                           <Textarea
                             id="notes"
                             value={classLogForm.notes}
-                            onChange={(e) => setClassLogForm((prev) => ({ ...prev, notes: e.target.value }))}
+                            onChange={(e) =>
+                              setClassLogForm((prev) => ({
+                                ...prev,
+                                notes: e.target.value,
+                              }))
+                            }
                             placeholder="Any additional notes about the class..."
                             rows={3}
                           />
                         </div>
                         <div className="flex gap-2">
-                          <Button onClick={addClassLog} className="bg-green-500 hover:bg-green-600">
+                          <Button
+                            onClick={addClassLog}
+                            className="bg-green-500 hover:bg-green-600"
+                          >
                             <Save className="h-4 w-4 mr-2" />
                             Save Class Log
                           </Button>
                           <Button
                             variant="outline"
                             onClick={() => {
-                              setShowAddClassLog(false)
-                              setClassLogForm({ topic_covered: "", notes: "", was_conducted: true })
+                              setShowAddClassLog(false);
+                              setClassLogForm({
+                                topic_covered: "",
+                                notes: "",
+                                was_conducted: true,
+                              });
                             }}
                           >
                             <X className="h-4 w-4 mr-2" />
@@ -823,31 +889,53 @@ export default function TuitionDetailsPage() {
                   )}
 
                   {selectedDate &&
-                  classLogs.find((log) => new Date(log.class_date).toDateString() === selectedDate.toDateString()) ? (
+                  classLogs.find(
+                    (log) =>
+                      new Date(log.class_date).toDateString() ===
+                      selectedDate.toDateString()
+                  ) ? (
                     <div className="space-y-4">
                       {classLogs
-                        .filter((log) => new Date(log.class_date).toDateString() === selectedDate.toDateString())
+                        .filter(
+                          (log) =>
+                            new Date(log.class_date).toDateString() ===
+                            selectedDate.toDateString()
+                        )
                         .map((log) => (
                           <div
                             key={log.id}
                             className="p-4 border rounded-lg bg-gradient-to-r from-green-50/50 to-emerald-50/50 dark:from-green-950/20 dark:to-emerald-950/20"
                           >
                             <div className="flex items-center justify-between mb-2">
-                              <Badge className={log.was_conducted ? "bg-green-500" : "bg-red-500"}>
+                              <Badge
+                                className={
+                                  log.was_conducted
+                                    ? "bg-green-500"
+                                    : "bg-red-500"
+                                }
+                              >
                                 {log.was_conducted ? "Conducted" : "Cancelled"}
                               </Badge>
-                              <span className="text-sm text-muted-foreground">{formatDate(log.class_date)}</span>
+                              <span className="text-sm text-muted-foreground">
+                                {formatDate(log.class_date)}
+                              </span>
                             </div>
                             {log.topic_covered && (
                               <div className="mb-2">
-                                <h4 className="font-medium text-sm">Topic Covered:</h4>
-                                <p className="text-sm text-muted-foreground">{log.topic_covered}</p>
+                                <h4 className="font-medium text-sm">
+                                  Topic Covered:
+                                </h4>
+                                <p className="text-sm text-muted-foreground">
+                                  {log.topic_covered}
+                                </p>
                               </div>
                             )}
                             {log.notes && (
                               <div>
                                 <h4 className="font-medium text-sm">Notes:</h4>
-                                <p className="text-sm text-muted-foreground">{log.notes}</p>
+                                <p className="text-sm text-muted-foreground">
+                                  {log.notes}
+                                </p>
                               </div>
                             )}
                           </div>
@@ -858,9 +946,12 @@ export default function TuitionDetailsPage() {
                       <div className="w-16 h-16 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
                         <CalendarIcon className="h-8 w-8 text-green-500" />
                       </div>
-                      <h3 className="font-medium mb-2 text-lg">No class log for this date</h3>
+                      <h3 className="font-medium mb-2 text-lg">
+                        No class log for this date
+                      </h3>
                       <p className="text-muted-foreground mb-6">
-                        Add a class log to track what was taught and student attendance
+                        Add a class log to track what was taught and student
+                        attendance
                       </p>
                       <Button
                         variant="outline"
@@ -885,7 +976,9 @@ export default function TuitionDetailsPage() {
                 <div className="flex items-center gap-4">
                   <Select
                     value={selectedMonth.toString()}
-                    onValueChange={(value) => setSelectedMonth(Number.parseInt(value))}
+                    onValueChange={(value) =>
+                      setSelectedMonth(Number.parseInt(value))
+                    }
                   >
                     <SelectTrigger className="w-32">
                       <SelectValue />
@@ -900,13 +993,18 @@ export default function TuitionDetailsPage() {
                   </Select>
                   <Select
                     value={selectedYear.toString()}
-                    onValueChange={(value) => setSelectedYear(Number.parseInt(value))}
+                    onValueChange={(value) =>
+                      setSelectedYear(Number.parseInt(value))
+                    }
                   >
                     <SelectTrigger className="w-24">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      {Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - 2 + i).map((year) => (
+                      {Array.from(
+                        { length: 5 },
+                        (_, i) => new Date().getFullYear() - 2 + i
+                      ).map((year) => (
                         <SelectItem key={year} value={year.toString()}>
                           {year}
                         </SelectItem>
@@ -919,7 +1017,9 @@ export default function TuitionDetailsPage() {
                 {students.length > 0 ? (
                   <div className="space-y-4">
                     {students.map((student) => {
-                      const feeRecord = feeRecords.find((record) => record.student_id === student.id)
+                      const feeRecord = feeRecords.find(
+                        (record) => record.student_id === student.id
+                      );
                       return (
                         <div
                           key={student.id}
@@ -930,12 +1030,17 @@ export default function TuitionDetailsPage() {
                               <DollarSign className="h-6 w-6 text-yellow-500" />
                             </div>
                             <div>
-                              <h3 className="font-medium text-lg">{student.name}</h3>
+                              <h3 className="font-medium text-lg">
+                                {student.name}
+                              </h3>
                               <p className="text-sm text-muted-foreground">
-                                Fee: {formatCurrency(student.fee_per_month)} for {MONTHS[selectedMonth]} {selectedYear}
+                                Fee: {formatCurrency(student.fee_per_month)} for{" "}
+                                {MONTHS[selectedMonth]} {selectedYear}
                               </p>
                               {feeRecord?.additional_notes && (
-                                <p className="text-xs text-muted-foreground mt-1">Note: {feeRecord.additional_notes}</p>
+                                <p className="text-xs text-muted-foreground mt-1">
+                                  Note: {feeRecord.additional_notes}
+                                </p>
                               )}
                             </div>
                           </div>
@@ -944,13 +1049,17 @@ export default function TuitionDetailsPage() {
                               checked={feeRecord?.status === "paid" || false}
                               onCheckedChange={(checked) => {
                                 if (checked && feeRecord) {
-                                  markPaymentAsPaid(feeRecord.id)
+                                  markPaymentAsPaid(feeRecord.id);
                                 }
                               }}
                               className="data-[state=checked]:bg-gradient-to-r data-[state=checked]:from-green-500 data-[state=checked]:to-emerald-500"
                             />
                             <Badge
-                              variant={feeRecord?.status === "paid" ? "default" : "destructive"}
+                              variant={
+                                feeRecord?.status === "paid"
+                                  ? "default"
+                                  : "destructive"
+                              }
                               className={
                                 feeRecord?.status === "paid"
                                   ? "bg-gradient-to-r from-green-500 to-emerald-500"
@@ -961,7 +1070,7 @@ export default function TuitionDetailsPage() {
                             </Badge>
                           </div>
                         </div>
-                      )
+                      );
                     })}
                   </div>
                 ) : (
@@ -969,8 +1078,12 @@ export default function TuitionDetailsPage() {
                     <div className="w-16 h-16 bg-gradient-to-br from-yellow-500/20 to-orange-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
                       <DollarSign className="h-8 w-8 text-yellow-500" />
                     </div>
-                    <h3 className="font-medium mb-2 text-lg">No students to manage fees for</h3>
-                    <p className="text-muted-foreground mb-6">Add students first to manage their fee payments</p>
+                    <h3 className="font-medium mb-2 text-lg">
+                      No students to manage fees for
+                    </h3>
+                    <p className="text-muted-foreground mb-6">
+                      Add students first to manage their fee payments
+                    </p>
                   </div>
                 )}
               </CardContent>
@@ -985,57 +1098,89 @@ export default function TuitionDetailsPage() {
               </CardHeader>
               <CardContent className="space-y-8">
                 <div>
-                  <h3 className="font-medium mb-4 text-lg">Basic Information</h3>
+                  <h3 className="font-medium mb-4 text-lg">
+                    Basic Information
+                  </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                     <div className="p-4 rounded-lg bg-gradient-to-r from-accent/20 to-accent/10 border border-border/50">
-                      <span className="font-medium text-muted-foreground">Created:</span>
-                      <p className="text-foreground mt-1">{formatDate(tuition.created_at)}</p>
+                      <span className="font-medium text-muted-foreground">
+                        Created:
+                      </span>
+                      <p className="text-foreground mt-1">
+                        {formatDate(tuition.created_at)}
+                      </p>
                     </div>
                     <div className="p-4 rounded-lg bg-gradient-to-r from-accent/20 to-accent/10 border border-border/50">
-                      <span className="font-medium text-muted-foreground">Last Updated:</span>
-                      <p className="text-foreground mt-1">{formatDate(tuition.updated_at)}</p>
+                      <span className="font-medium text-muted-foreground">
+                        Last Updated:
+                      </span>
+                      <p className="text-foreground mt-1">
+                        {formatDate(tuition.updated_at)}
+                      </p>
                     </div>
                     <div className="p-4 rounded-lg bg-gradient-to-r from-accent/20 to-accent/10 border border-border/50">
-                      <span className="font-medium text-muted-foreground">Status:</span>
-                      <p className="text-foreground mt-1 capitalize">{tuition.status}</p>
+                      <span className="font-medium text-muted-foreground">
+                        Status:
+                      </span>
+                      <p className="text-foreground mt-1 capitalize">
+                        {tuition.status}
+                      </p>
                     </div>
                     <div className="p-4 rounded-lg bg-gradient-to-r from-accent/20 to-accent/10 border border-border/50">
-                      <span className="font-medium text-muted-foreground">Total Students:</span>
-                      <p className="text-foreground mt-1">{stats.totalStudents}</p>
+                      <span className="font-medium text-muted-foreground">
+                        Total Students:
+                      </span>
+                      <p className="text-foreground mt-1">
+                        {stats.totalStudents}
+                      </p>
                     </div>
                     {tuition.address && (
                       <div className="p-4 rounded-lg bg-gradient-to-r from-accent/20 to-accent/10 border border-border/50 md:col-span-2">
-                        <span className="font-medium text-muted-foreground">Address:</span>
-                        <p className="text-foreground mt-1">{tuition.address}</p>
-                      </div>
-                    )}
-                    {tuition.teaching_days && tuition.teaching_days.length > 0 && (
-                      <div className="p-4 rounded-lg bg-gradient-to-r from-accent/20 to-accent/10 border border-border/50 md:col-span-2">
-                        <span className="font-medium text-muted-foreground">Teaching Schedule:</span>
+                        <span className="font-medium text-muted-foreground">
+                          Address:
+                        </span>
                         <p className="text-foreground mt-1">
-                          {tuition.days_per_week} days per week: {getTeachingDaysDisplay(tuition.teaching_days)}
+                          {tuition.address}
                         </p>
                       </div>
                     )}
+                    {tuition.teaching_days &&
+                      tuition.teaching_days.length > 0 && (
+                        <div className="p-4 rounded-lg bg-gradient-to-r from-accent/20 to-accent/10 border border-border/50 md:col-span-2">
+                          <span className="font-medium text-muted-foreground">
+                            Teaching Schedule:
+                          </span>
+                          <p className="text-foreground mt-1">
+                            {tuition.days_per_week} days per week:{" "}
+                            {getTeachingDaysDisplay(tuition.teaching_days)}
+                          </p>
+                        </div>
+                      )}
                   </div>
                 </div>
 
                 <div className="space-y-3">
                   <h3 className="font-medium text-lg">Actions</h3>
-                  <Button
+                  {/* <Button
                     variant="outline"
                     className="w-full justify-start bg-gradient-to-r from-background to-accent/5 border-border/50 hover:from-accent/10 hover:to-accent/20"
                     onClick={() => {
-                      toast.info("Edit tuition functionality coming soon")
+                      toast.info("Edit tuition functionality coming soon");
                     }}
                   >
                     <Edit className="h-4 w-4 mr-2" />
                     Edit Tuition Details
-                  </Button>
+                  </Button> */}
+                  <EditTuitionModal
+                    tuition={tuition}
+                    onTuitionUpdated={fetchTuitionDetails}
+                  />
                 </div>
 
                 <div className="border-t pt-6">
-                  <h3 className="font-medium mb-4 text-lg text-destructive">Danger Zone</h3>
+                  <h3 className="font-medium mb-4 text-lg text-destructive">
+                    Danger Zone
+                  </h3>
                   <div className="space-y-3">
                     <Button
                       variant="outline"
@@ -1062,9 +1207,9 @@ export default function TuitionDetailsPage() {
             if (activeTab === "students") {
               // This will be handled by the AddStudentModal trigger
             } else if (activeTab === "calendar") {
-              setShowAddClassLog(true)
+              setShowAddClassLog(true);
             } else if (activeTab === "payments") {
-              toast.info("Record payment functionality coming soon")
+              toast.info("Record payment functionality coming soon");
             }
           }}
         >
@@ -1072,7 +1217,7 @@ export default function TuitionDetailsPage() {
         </Button>
       </div>
     </div>
-  )
+  );
 }
 
 

@@ -30,18 +30,47 @@ export default function TuitionsPage() {
   const [tuitions, setTuitions] = useState<TuitionWithStats[]>([])
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState<"active" | "archived">("active")
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null)
 
   useEffect(() => {
     if (isLoaded && user) {
+      getCurrentUserId()
+    }
+  }, [isLoaded, user])
+
+  useEffect(() => {
+    if (currentUserId) {
       fetchTuitions()
     }
-  }, [isLoaded, user, activeTab])
+  }, [currentUserId, activeTab])
+
+  const getCurrentUserId = async () => {
+    try {
+      // Get the current user's database ID using their clerk_id
+      const { data: userData, error } = await supabase
+        .from("users")
+        .select("id")
+        .eq("clerk_id", user?.id)
+        .single()
+
+      if (error) {
+        console.error("Error fetching user:", error)
+        return
+      }
+
+      setCurrentUserId(userData.id)
+    } catch (error) {
+      console.error("Error getting current user ID:", error)
+    }
+  }
 
   const fetchTuitions = async () => {
+    if (!currentUserId) return
+
     try {
       setLoading(true)
 
-      // Get user's tuitions with student count and fee stats
+      // Get user's tuitions with student count and fee stats - FILTERED BY CURRENT USER
       const { data, error } = await supabase
         .from("tuitions")
         .select(`
@@ -61,6 +90,7 @@ export default function TuitionsPage() {
             class_date
           )
         `)
+        .eq("tutor_id", currentUserId) // THIS IS THE KEY FIX - Filter by current user
         .eq("status", activeTab)
         .order("created_at", { ascending: false })
 
@@ -136,7 +166,7 @@ export default function TuitionsPage() {
     })
   }
 
-  if (!isLoaded || loading) {
+  if (!isLoaded || loading || !currentUserId) {
     return (
       <div className="min-h-screen bg-background p-4">
         <div className="animate-pulse space-y-4">
