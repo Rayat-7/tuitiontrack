@@ -33,6 +33,12 @@ const navigation = [
     gradient: "from-violet-500 to-purple-600",
   },
   {
+    name: "Attendance",
+    href: "/attendance",
+    icon: Clock,
+    gradient: "from-pink-500 to-rose-600",
+  },
+  {
     name: "My Tuitions",
     href: "/tuitions",
     icon: BookOpen,
@@ -52,30 +58,25 @@ const navigation = [
     gradient: "from-orange-500 to-red-600",
   },
   {
-    name: "Fee Management",
+    name: "Fee History",
     href: "/fees",
     icon: DollarSign,
     gradient: "from-yellow-500 to-orange-600",
     badge: "2",
   },
-  {
-    name: "Attendance",
-    href: "/attendance",
-    icon: Clock,
-    gradient: "from-pink-500 to-rose-600",
-  },
+  
   {
     name: "Reports",
     href: "/reports",
     icon: BarChart3,
     gradient: "from-indigo-500 to-purple-600",
   },
-  {
-    name: "Class Logs",
-    href: "/logs",
-    icon: FileText,
-    gradient: "from-teal-500 to-cyan-600",
-  },
+  // {
+  //   name: "Class Logs",
+  //   href: "/logs",
+  //   icon: FileText,
+  //   gradient: "from-teal-500 to-cyan-600",
+  // },
 ]
 
 const quickActions = [
