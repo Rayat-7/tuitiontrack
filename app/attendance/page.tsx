@@ -692,9 +692,9 @@ export default function AttendancePage() {
   // Show attendance interface for selected tuition
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/10">
-      <div className="container mx-auto p-4 md:p-8 pt-16 md:pt-8">
+      <div className="container mx-auto p-4 md:p-8 pt-16 md:pt-4">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6 md:mb-8">
+        <div className="flex items-center justify-between mb-6 md:mb-1">
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="icon" onClick={() => setSelectedTuition(null)}>
               <ArrowLeft className="h-4 w-4" />
@@ -722,6 +722,24 @@ export default function AttendancePage() {
             <CardContent className="space-y-4 md:space-y-6">
               {/* Monthly Stats */}
               <div className="grid grid-cols-2 gap-2 md:gap-3">
+  <div className="bg-orange-50 dark:bg-orange-950/20 px-3 py-2 rounded-md text-center text-xs hover:shadow-sm transition">
+    <p className="text-[10px] text-muted-foreground">Scheduled</p>
+    <p className="text-sm font-semibold text-orange-600">{monthlyStats.scheduled}</p>
+  </div>
+  <div className="bg-green-50 dark:bg-green-950/20 px-3 py-2 rounded-md text-center text-xs hover:shadow-sm transition">
+    <p className="text-[10px] text-muted-foreground">Conducted</p>
+    <p className="text-sm font-semibold text-green-600">{monthlyStats.conducted}</p>
+  </div>
+  <div className="bg-red-50 dark:bg-red-950/20 px-3 py-2 rounded-md text-center text-xs hover:shadow-sm transition">
+    <p className="text-[10px] text-muted-foreground">Missed</p>
+    <p className="text-sm font-semibold text-red-600">{monthlyStats.missed}</p>
+  </div>
+  <div className="bg-blue-50 dark:bg-blue-950/20 px-3 py-2 rounded-md text-center text-xs hover:shadow-sm transition">
+    <p className="text-[10px] text-muted-foreground">Remaining</p>
+    <p className="text-sm font-semibold text-blue-600">{monthlyStats.remaining}</p>
+  </div>
+</div>
+              {/* <div className="grid grid-cols-2 gap-2 md:gap-3">
                 <div className="bg-orange-50 dark:bg-orange-950/20 p-2 md:p-3 rounded-lg text-center">
                   <p className="text-xs text-muted-foreground">Scheduled</p>
                   <p className="text-lg font-bold text-orange-600">{monthlyStats.scheduled}</p>
@@ -734,11 +752,11 @@ export default function AttendancePage() {
                   <p className="text-xs text-muted-foreground">Missed</p>
                   <p className="text-lg font-bold text-red-600">{monthlyStats.missed}</p>
                 </div>
-                <div className="bg-blue-50 dark:bg-blue-950/20 p-2 md:p-3 rounded-lg text-center">
+                <div className="bg-blue-50 dark:bg-blue-950/20 p-2 md:p-1 rounded-lg text-center">
                   <p className="text-xs text-muted-foreground">Remaining</p>
                   <p className="text-lg font-bold text-blue-600">{monthlyStats.remaining}</p>
                 </div>
-              </div>
+              </div> */}
 
               {/* Legend */}
               <div className="space-y-2 text-xs md:text-sm">
@@ -828,7 +846,14 @@ export default function AttendancePage() {
               </div>
 
               {/* Today's Stats (if taking attendance) */}
-              {dateStatus !== "future" && attendanceRecords.length > 0 && (
+              
+            </CardContent>
+          </Card>
+
+          {/* Student Attendance List */}
+          <div className="lg:col-span-2">
+            <Card className="border-0 shadow-lg bg-gradient-to-br from-background to-accent/5">
+            {dateStatus !== "future" && attendanceRecords.length > 0 && (
                 <div className="space-y-3">
                   <div className="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-950/20 dark:to-blue-900/20 p-3 md:p-4 rounded-lg">
                     <p className="text-sm text-muted-foreground">Attendance Rate</p>
@@ -848,12 +873,6 @@ export default function AttendancePage() {
                   </div>
                 </div>
               )}
-            </CardContent>
-          </Card>
-
-          {/* Student Attendance List */}
-          <div className="lg:col-span-2">
-            <Card className="border-0 shadow-lg bg-gradient-to-br from-background to-accent/5">
               <CardHeader>
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <CardTitle className="text-lg md:text-xl">

@@ -10,7 +10,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { DollarSign, Search, CheckCircle, XCircle, Clock, ArrowLeft, TrendingUp } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 import { format } from "date-fns"
-import { toast } from "sonner"
 import Link from "next/link"
 
 interface FeeRecord {
@@ -173,26 +172,6 @@ export default function FeesPage() {
     }
   }
 
-  const markAsPaid = async (recordId: string) => {
-    try {
-      const { error } = await supabase
-        .from("fee_records")
-        .update({
-          status: "paid",
-          paid_date: new Date().toISOString().split("T")[0],
-        })
-        .eq("id", recordId)
-
-      if (error) throw error
-
-      toast.success("Payment marked as paid!")
-      fetchFeeRecords()
-    } catch (error) {
-      console.error("Error updating payment:", error)
-      toast.error("Failed to update payment status")
-    }
-  }
-
   const getFeeStats = (): FeeStats => {
     const totalRecords = feeRecords.length
     const totalPaid = feeRecords.filter((r) => r.status === "paid").length
@@ -242,95 +221,41 @@ export default function FeesPage() {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6 mb-8">
-          <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/20 dark:to-cyan-950/20 border-0">
-            <CardContent className="p-6">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-xl flex items-center justify-center">
-                  <DollarSign className="h-6 w-6 text-white" />
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Total Records</p>
-                  <p className="text-2xl font-bold text-blue-600">{stats.totalRecords}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+        <div className="flex flex-wrap gap-2 mb-8">
+          <div className="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/20 dark:to-cyan-950/20 border border-border/40 rounded-lg px-3 py-2 flex items-center gap-2">
+            <DollarSign className="h-4 w-4 text-blue-600" />
+            <span className="text-sm font-medium">Records: {stats.totalRecords}</span>
+          </div>
 
-          <Card className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border-0">
-            <CardContent className="p-6">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center">
-                  <CheckCircle className="h-6 w-6 text-white" />
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Paid</p>
-                  <p className="text-2xl font-bold text-green-600">{stats.totalPaid}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border border-border/40 rounded-lg px-3 py-2 flex items-center gap-2">
+            <CheckCircle className="h-4 w-4 text-green-600" />
+            <span className="text-sm font-medium">Paid: {stats.totalPaid}</span>
+          </div>
 
-          <Card className="bg-gradient-to-br from-red-50 to-rose-50 dark:from-red-950/20 dark:to-rose-950/20 border-0">
-            <CardContent className="p-6">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-rose-600 rounded-xl flex items-center justify-center">
-                  <XCircle className="h-6 w-6 text-white" />
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Due</p>
-                  <p className="text-2xl font-bold text-red-600">{stats.totalDue}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <div className="bg-gradient-to-br from-red-50 to-rose-50 dark:from-red-950/20 dark:to-rose-950/20 border border-border/40 rounded-lg px-3 py-2 flex items-center gap-2">
+            <XCircle className="h-4 w-4 text-red-600" />
+            <span className="text-sm font-medium">Due: {stats.totalDue}</span>
+          </div>
 
-          <Card className="bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-950/20 dark:to-orange-950/20 border-0">
-            <CardContent className="p-6">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-xl flex items-center justify-center">
-                  <Clock className="h-6 w-6 text-white" />
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Partial</p>
-                  <p className="text-2xl font-bold text-yellow-600">{stats.totalPartial}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <div className="bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-950/20 dark:to-orange-950/20 border border-border/40 rounded-lg px-3 py-2 flex items-center gap-2">
+            <Clock className="h-4 w-4 text-yellow-600" />
+            <span className="text-sm font-medium">Partial: {stats.totalPartial}</span>
+          </div>
 
-          <Card className="bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-950/20 dark:to-purple-950/20 border-0">
-            <CardContent className="p-6">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-violet-500 to-purple-600 rounded-xl flex items-center justify-center">
-                  <TrendingUp className="h-6 w-6 text-white" />
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Total Revenue</p>
-                  <p className="text-2xl font-bold text-violet-600">৳{stats.totalRevenue}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <div className="bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-950/20 dark:to-purple-950/20 border border-border/40 rounded-lg px-3 py-2 flex items-center gap-2">
+            <TrendingUp className="h-4 w-4 text-violet-600" />
+            <span className="text-sm font-medium">Revenue: ৳{stats.totalRevenue}</span>
+          </div>
 
-          <Card className="bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-950/20 dark:to-red-950/20 border-0">
-            <CardContent className="p-6">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-600 rounded-xl flex items-center justify-center">
-                  <DollarSign className="h-6 w-6 text-white" />
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Outstanding</p>
-                  <p className="text-2xl font-bold text-orange-600">৳{stats.totalOutstanding}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <div className="bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-950/20 dark:to-red-950/20 border border-border/40 rounded-lg px-3 py-2 flex items-center gap-2">
+            <DollarSign className="h-4 w-4 text-orange-600" />
+            <span className="text-sm font-medium">Outstanding: ৳{stats.totalOutstanding}</span>
+          </div>
         </div>
 
         {/* Filters */}
         <Card className="mb-8">
-          <CardContent className="p-6">
+          <CardContent className="p-1">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
@@ -460,17 +385,6 @@ export default function FeesPage() {
                           </p>
                         )}
                       </div>
-
-                      {record.status !== "paid" && (
-                        <Button
-                          size="sm"
-                          onClick={() => markAsPaid(record.id)}
-                          className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
-                        >
-                          <CheckCircle className="h-3 w-3 mr-1" />
-                          Mark Paid
-                        </Button>
-                      )}
                     </div>
                   </div>
                 ))}

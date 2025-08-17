@@ -40,6 +40,7 @@ import { toast } from "sonner"
 import AddStudentModal from "@/components/AddStudentModal"
 import EditStudentModal from "@/components/EditStudentModal"
 import { EditTuitionModal } from "@/components/EditTuitionModal"
+import EditClassLogModal from "@/components/EditClassLogModal"
 
 // Create authenticated Supabase client
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
@@ -542,7 +543,7 @@ export default function TuitionDetailsPage() {
         </div>
 
         {/* Stats Cards */}
-        <div className="flex flex-wrap gap-3 mb-8 justify-end">
+        {/* <div className="flex flex-wrap gap-3 mb-8 justify-end">
           <Card className="relative overflow-hidden border-0 shadow-md hover:shadow-lg transition-all duration-300 min-w-[140px]">
             <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-cyan-600/10"></div>
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-cyan-600"></div>
@@ -614,7 +615,7 @@ export default function TuitionDetailsPage() {
               </div>
             </CardContent>
           </Card>
-        </div>
+        </div> */}
 
         {/* Main Content Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
@@ -761,6 +762,231 @@ export default function TuitionDetailsPage() {
 
           {/* Calendar Tab */}
           <TabsContent value="calendar">
+  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <Card className="lg:col-span-1 border-0 shadow-lg bg-gradient-to-br from-background to-accent/5">
+      <CardHeader>
+        <CardTitle className="text-lg">Calendar</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Calendar
+          mode="single"
+          selected={selectedDate}
+          onSelect={setSelectedDate}
+          className="rounded-md border-0"
+          modifiers={{
+            classDay: classLogs
+              .filter((log) => log.was_conducted)
+              .map((log) => new Date(log.class_date)),
+          }}
+          modifiersStyles={{
+            classDay: {
+              backgroundColor: "rgb(34 197 94)",
+              color: "white",
+              fontWeight: "bold",
+            },
+          }}
+        />
+        <div className="mt-4 text-xs text-muted-foreground">
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 bg-green-500 rounded"></div>
+            <span>Class conducted</span>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+
+    <Card className="lg:col-span-2 border-0 shadow-lg bg-gradient-to-br from-background to-accent/5">
+      <CardHeader className="flex flex-row items-center justify-between">
+        <CardTitle className="text-lg">
+          Class Log -{" "}
+          {selectedDate?.toLocaleDateString("en-US", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}
+        </CardTitle>
+        {(() => {
+          const existingLog = selectedDate 
+            ? classLogs.find(
+                (log) =>
+                  new Date(log.class_date).toDateString() ===
+                  selectedDate.toDateString()
+              )
+            : null;
+
+          return existingLog ? (
+            <EditClassLogModal
+              classLog={existingLog}
+              onClassLogUpdated={fetchTuitionDetails}
+              onClassLogDeleted={fetchTuitionDetails}
+            />
+          ) : (
+            <Button
+              className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 shadow-lg"
+              onClick={() => setShowAddClassLog(true)}
+            >
+              <CalendarPlus className="h-4 w-4 mr-2" />
+              Add Class Log
+            </Button>
+          );
+        })()}
+      </CardHeader>
+      <CardContent>
+        {showAddClassLog && (
+          <div className="mb-6 p-4 border rounded-lg bg-gradient-to-r from-green-50/50 to-emerald-50/50 dark:from-green-950/20 dark:to-emerald-950/20">
+            <div className="space-y-4">
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="was_conducted"
+                  checked={classLogForm.was_conducted}
+                  onCheckedChange={(checked) =>
+                    setClassLogForm((prev) => ({
+                      ...prev,
+                      was_conducted: checked as boolean,
+                    }))
+                  }
+                />
+                <Label htmlFor="was_conducted">
+                  Class was conducted
+                </Label>
+              </div>
+              <div>
+                <Label htmlFor="topic">Topic Covered</Label>
+                <Input
+                  id="topic"
+                  value={classLogForm.topic_covered}
+                  onChange={(e) =>
+                    setClassLogForm((prev) => ({
+                      ...prev,
+                      topic_covered: e.target.value,
+                    }))
+                  }
+                  placeholder="What topic was covered in this class?"
+                />
+              </div>
+              <div>
+                <Label htmlFor="notes">Notes</Label>
+                <Textarea
+                  id="notes"
+                  value={classLogForm.notes}
+                  onChange={(e) =>
+                    setClassLogForm((prev) => ({
+                      ...prev,
+                      notes: e.target.value,
+                    }))
+                  }
+                  placeholder="Any additional notes about the class..."
+                  rows={3}
+                />
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  onClick={addClassLog}
+                  className="bg-green-500 hover:bg-green-600"
+                >
+                  <Save className="h-4 w-4 mr-2" />
+                  Save Class Log
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setShowAddClassLog(false);
+                    setClassLogForm({
+                      topic_covered: "",
+                      notes: "",
+                      was_conducted: true,
+                    });
+                  }}
+                >
+                  <X className="h-4 w-4 mr-2" />
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {selectedDate &&
+        classLogs.find(
+          (log) =>
+            new Date(log.class_date).toDateString() ===
+            selectedDate.toDateString()
+        ) ? (
+          <div className="space-y-4">
+            {classLogs
+              .filter(
+                (log) =>
+                  new Date(log.class_date).toDateString() ===
+                  selectedDate.toDateString()
+              )
+              .map((log) => (
+                <div
+                  key={log.id}
+                  className="p-4 border rounded-lg bg-gradient-to-r from-green-50/50 to-emerald-50/50 dark:from-green-950/20 dark:to-emerald-950/20"
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <Badge
+                      className={
+                        log.was_conducted
+                          ? "bg-green-500"
+                          : "bg-red-500"
+                      }
+                    >
+                      {log.was_conducted ? "Conducted" : "Cancelled"}
+                    </Badge>
+                    <span className="text-sm text-muted-foreground">
+                      {formatDate(log.class_date)}
+                    </span>
+                  </div>
+                  {log.topic_covered && (
+                    <div className="mb-2">
+                      <h4 className="font-medium text-sm">
+                        Topic Covered:
+                      </h4>
+                      <p className="text-sm text-muted-foreground">
+                        {log.topic_covered}
+                      </p>
+                    </div>
+                  )}
+                  {log.notes && (
+                    <div>
+                      <h4 className="font-medium text-sm">Notes:</h4>
+                      <p className="text-sm text-muted-foreground">
+                        {log.notes}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              ))}
+          </div>
+        ) : (
+          <div className="text-center py-12">
+            <div className="w-16 h-16 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <CalendarIcon className="h-8 w-8 text-green-500" />
+            </div>
+            <h3 className="font-medium mb-2 text-lg">
+              No class log for this date
+            </h3>
+            <p className="text-muted-foreground mb-6">
+              Add a class log to track what was taught and student
+              attendance
+            </p>
+            <Button
+              variant="outline"
+              className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-green-500/20 hover:from-green-500/20 hover:to-emerald-500/20"
+              onClick={() => setShowAddClassLog(true)}
+            >
+              <CalendarPlus className="h-4 w-4 mr-2" />
+              Add Class Log
+            </Button>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  </div>
+</TabsContent>
+          {/* <TabsContent value="calendar">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <Card className="lg:col-span-1 border-0 shadow-lg bg-gradient-to-br from-background to-accent/5">
                 <CardHeader>
@@ -966,7 +1192,7 @@ export default function TuitionDetailsPage() {
                 </CardContent>
               </Card>
             </div>
-          </TabsContent>
+          </TabsContent> */}
 
           {/* Payments Tab */}
           <TabsContent value="payments">
