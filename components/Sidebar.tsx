@@ -86,18 +86,18 @@ const quickActions = [
     icon: Plus,
     gradient: "from-violet-500 to-purple-600",
   },
-  {
-    name: "Add Student",
-    href: "/students/new",
-    icon: Users,
-    gradient: "from-blue-500 to-cyan-600",
-  },
-  {
-    name: "Record Payment",
-    href: "/fees/new",
-    icon: DollarSign,
-    gradient: "from-green-500 to-emerald-600",
-  },
+  // {
+  //   name: "Add Student",
+  //   href: "/students/new",
+  //   icon: Users,
+  //   gradient: "from-blue-500 to-cyan-600",
+  // },
+  // {
+  //   name: "Record Payment",
+  //   href: "/fees/new",
+  //   icon: DollarSign,
+  //   gradient: "from-green-500 to-emerald-600",
+  // },
 ]
 
 interface SidebarProps {
@@ -128,14 +128,7 @@ export default function Sidebar({ className }: SidebarProps) {
 >
   {isOpen ? <X className="h-5 w-5" /> : <PanelsRightBottom className="h-5 w-5 text-primary" />}
 </Button>
-      {/* <Button
-        variant="ghost"
-        size="icon"
-        className="fixed top-10 left-4 z-50 md:hidden bg-background/80 backdrop-blur-sm border shadow-lg"
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        {isOpen ? <X className="h-5 w-5 hidden" /> : <PanelsRightBottom  className="h-5 w-5 text-violet-400" />}
-      </Button> */}
+    
 
       {/* Mobile Overlay */}
       {isOpen && <div className="fixed inset-0  z-40 md:hidden" onClick={() => setIsOpen(false)} />}

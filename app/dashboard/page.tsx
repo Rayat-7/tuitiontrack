@@ -222,20 +222,17 @@ export default function Dashboard() {
                 Welcome back, {user?.firstName || "Tutor"}! 👋
               </h1>
               <div className="flex items-center gap-2 mt-2">
-                <Badge variant="outline" className="bg-gradient-to-r from-blue-50 to-cyan-50 border-blue-200">
+                <Badge variant="outline" className="bg-gradient-to-r from-blue-50 to-cyan-50 border-blue-200 dark:text-blue-800">
                   <Calendar className="h-3 w-3 mr-1" />
                   {formattedDate}
                 </Badge>
-                <Badge variant="outline" className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200">
+                <Badge variant="outline" className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:text-blue-800">
                   <Clock className="h-3 w-3 mr-1" />
                   {formattedTime}
                 </Badge>
               </div>
             </div>
-            <Button className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg">
-              <Bell className="h-4 w-4 mr-2" />
-              Notifications
-            </Button>
+            
           </div>
           <p className="text-muted-foreground text-lg">Here's what's happening with your tuitions today</p>
         </div>
@@ -282,7 +279,7 @@ export default function Dashboard() {
                 {recentTuitions.map((tuition) => (
                   <div
                     key={tuition.id}
-                    className="flex items-center justify-between p-4 border rounded-xl hover:bg-gradient-to-r hover:from-accent/30 hover:to-accent/10 transition-all duration-200 hover:scale-[1.01] hover:shadow-md"
+                    className="flex items-center justify-between p-2 border rounded-xl hover:bg-gradient-to-r hover:from-accent/30 hover:to-accent/10 transition-all duration-200 hover:scale-[1.01] hover:shadow-md"
                   >
                     <div className="flex items-center space-x-4">
                       <div className="w-12 h-12 bg-gradient-to-br from-primary/20 to-primary/10 rounded-xl flex items-center justify-center">
@@ -294,18 +291,7 @@ export default function Dashboard() {
                       </div>
                     </div>
                     <div className="flex items-center space-x-3">
-                      {/* <Badge
-                        variant="outline"
-                        className="bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border-blue-500/20"
-                      >
-                        {tuition.studentCount} students
-                      </Badge> */}
-                      {/* <Badge
-                        variant={tuition.status === "active" ? "default" : "secondary"}
-                        className={tuition.status === "active" ? "bg-gradient-to-r from-green-500 to-emerald-500" : ""}
-                      >
-                        {tuition.status}
-                      </Badge> */}
+                    
                       <Link href={`/tuitions/${tuition.id}`}>
                         <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
                           <Eye className="h-4 w-4" />
@@ -333,125 +319,7 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        {/* Stats Cards */}
-        {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card className="relative overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
-            <div className="absolute inset-0 bg-gradient-to-br from-violet-500/10 to-purple-600/10"></div>
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-violet-500 to-purple-600"></div>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative">
-              <CardTitle className="text-sm font-medium">Total Tuitions</CardTitle>
-              <div className="p-2 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600">
-                <BookOpen className="h-4 w-4 text-white" />
-              </div>
-            </CardHeader>
-            <CardContent className="relative">
-              <div className="text-2xl font-bold text-violet-600">{stats.totalTuitions}</div>
-              <p className="text-xs text-muted-foreground flex items-center mt-1">
-                <TrendingUp className="h-3 w-3 mr-1" />
-                Active tuitions
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="relative overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-cyan-600/10"></div>
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-cyan-600"></div>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative">
-              <CardTitle className="text-sm font-medium">Total Students</CardTitle>
-              <div className="p-2 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-600">
-                <Users className="h-4 w-4 text-white" />
-              </div>
-            </CardHeader>
-            <CardContent className="relative">
-              <div className="text-2xl font-bold text-blue-600">{stats.totalStudents}</div>
-              <p className="text-xs text-muted-foreground flex items-center mt-1">
-                <TrendingUp className="h-3 w-3 mr-1" />
-                Across all tuitions
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="relative overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
-            <div className="absolute inset-0 bg-gradient-to-br from-red-500/10 to-pink-600/10"></div>
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 to-pink-600"></div>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative">
-              <CardTitle className="text-sm font-medium">Unpaid Fees</CardTitle>
-              <div className="p-2 rounded-lg bg-gradient-to-br from-red-500 to-pink-600">
-                <DollarSign className="h-4 w-4 text-white" />
-              </div>
-            </CardHeader>
-            <CardContent className="relative">
-              <div className="text-2xl font-bold text-red-600">{stats.unpaidFees}</div>
-              <p className="text-xs text-muted-foreground flex items-center mt-1">
-                <Clock className="h-3 w-3 mr-1" />
-                Students with due fees
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="relative overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
-            <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 to-emerald-600/10"></div>
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-500 to-emerald-600"></div>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative">
-              <CardTitle className="text-sm font-medium">Today's Classes</CardTitle>
-              <div className="p-2 rounded-lg bg-gradient-to-br from-green-500 to-emerald-600">
-                <Calendar className="h-4 w-4 text-white" />
-              </div>
-            </CardHeader>
-            <CardContent className="relative">
-              <div className="text-2xl font-bold text-green-600">{stats.upcomingClasses}</div>
-              <p className="text-xs text-muted-foreground flex items-center mt-1">
-                <Clock className="h-3 w-3 mr-1" />
-                Scheduled for today
-              </p>
-            </CardContent>
-          </Card>
-        </div> */}
-
-        {/* Quick Actions */}
-        {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Link href="/tuitions/new">
-            <Card className="cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-[1.02] border-0 bg-gradient-to-br from-violet-500/5 to-purple-600/5 hover:from-violet-500/10 hover:to-purple-600/10">
-              <CardContent className="flex items-center justify-center p-8">
-                <div className="text-center">
-                  <div className="w-12 h-12 bg-gradient-to-br from-violet-500 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-                    <Plus className="h-6 w-6 text-white" />
-                  </div>
-                  <p className="font-medium text-lg">New Tuition</p>
-                  <p className="text-sm text-muted-foreground mt-1">Create a new tuition group</p>
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
-
-          <Link href="/attendance">
-            <Card className="cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-[1.02] border-0 bg-gradient-to-br from-blue-500/5 to-cyan-600/5 hover:from-blue-500/10 hover:to-cyan-600/10">
-              <CardContent className="flex items-center justify-center p-8">
-                <div className="text-center">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-                    <Users className="h-6 w-6 text-white" />
-                  </div>
-                  <p className="font-medium text-lg">Take Attendance</p>
-                  <p className="text-sm text-muted-foreground mt-1">Mark student attendance</p>
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
-
-          <Link href="/fees">
-            <Card className="cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-[1.02] border-0 bg-gradient-to-br from-green-500/5 to-emerald-600/5 hover:from-green-500/10 hover:to-emerald-600/10">
-              <CardContent className="flex items-center justify-center p-8">
-                <div className="text-center">
-                  <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-                    <DollarSign className="h-6 w-6 text-white" />
-                  </div>
-                  <p className="font-medium text-lg">Manage Fees</p>
-                  <p className="text-sm text-muted-foreground mt-1">Track payments and dues</p>
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
-        </div> */}
+       
       </div>
 
       {/* Floating Action Button */}

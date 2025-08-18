@@ -1,8 +1,8 @@
+
 "use client"
 import { useEffect } from "react"
 import { redirect } from "next/navigation"
 import {
-  BookOpen,
   Users,
   Calendar,
   DollarSign,
@@ -14,10 +14,38 @@ import {
   HelpCircle,
   RefreshCw,
   Share,
-  MousePointer,
+  GraduationCap,
+  TrendingUp,
+  Shield,
+  Zap,
+  Target,
+  Award,
+  Check,
 } from "lucide-react"
 import Link from "next/link"
 import { useUserSync } from "./hooks/useUserSync"
+import { AnimatedGroup } from "@/components/ui/animated-group"
+import { Button } from "@/components/ui/button"
+
+const transitionVariants = {
+  item: {
+    hidden: {
+      opacity: 0,
+      filter: "blur(12px)",
+      y: 12,
+    },
+    visible: {
+      opacity: 1,
+      filter: "blur(0px)",
+      y: 0,
+      transition: {
+        type: "spring",
+        bounce: 0.3,
+        duration: 1.5,
+      },
+    },
+  },
+}
 
 export default function Home() {
   const { user, isLoaded } = useUserSync()
@@ -29,6 +57,15 @@ export default function Home() {
   }, [isLoaded, user])
 
   useEffect(() => {
+    const nav = document.querySelector("header")
+    if (nav) {
+      nav.style.transform = "translateY(-100%)"
+      nav.style.transition = "transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)"
+      setTimeout(() => {
+        nav.style.transform = "translateY(0)"
+      }, 200)
+    }
+
     const revealEls = document.querySelectorAll("[data-reveal]")
     revealEls.forEach((el, i) => {
       el.classList.add(
@@ -70,31 +107,32 @@ export default function Home() {
   }
 
   return (
-    <div className="bg-neutral-950 text-neutral-200 antialiased selection:bg-violet-500/30 selection:text-white scroll-smooth font-sans">
+    <div className="bg-gradient-to-br from-neutral-950 via-neutral-950 to-orange-800 text-neutral-200 antialiased selection:bg-violet-500/30 selection:text-white scroll-smooth font-sans overflow-x-hidden">
       <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute left-1/2 top-[-10%] h-[40rem] w-[40rem] -translate-x-1/2 rounded-full blur-3xl opacity-25 motion-safe:animate-pulse bg-gradient-radial from-violet-500/35 to-transparent"></div>
+        <div className="absolute left-1/2 top-[-10%] h-[50rem] w-[50rem] -translate-x-1/2 rounded-full blur-3xl opacity-30 motion-safe:animate-pulse bg-gradient-radial from-violet-500/40 to-transparent"></div>
         <div
-          className="absolute right-[-15%] bottom-[-10%] h-[36rem] w-[36rem] rounded-full blur-3xl opacity-20 motion-safe:animate-pulse bg-gradient-radial from-pink-500/35 to-transparent"
+          className="absolute right-[-15%] bottom-[-10%] h-[45rem] w-[45rem] rounded-full blur-3xl opacity-25 motion-safe:animate-pulse bg-gradient-radial from-pink-500/40 to-transparent"
           style={{ animationDelay: ".8s" }}
         ></div>
-        <div className="absolute left-[8%] top-[20%] h-64 w-64 rounded-full bg-violet-500/20 blur-2xl opacity-20 motion-safe:animate-bounce"></div>
+        <div className="absolute left-[8%] top-[20%] h-80 w-80 rounded-full bg-violet-500/25 blur-3xl opacity-25 motion-safe:animate-bounce"></div>
         <div
-          className="absolute right-[10%] top-[30%] h-48 w-48 rounded-full bg-fuchsia-500/20 blur-2xl opacity-20 motion-safe:animate-bounce"
+          className="absolute right-[10%] top-[30%] h-64 w-64 rounded-full bg-fuchsia-500/25 blur-3xl opacity-25 motion-safe:animate-bounce"
           style={{ animationDelay: ".6s" }}
         ></div>
-        <div className="absolute left-[55%] top-[65%] h-24 w-24 rounded-full border border-white/10 motion-safe:animate-ping"></div>
+        <div className="absolute left-[55%] top-[65%] h-32 w-32 rounded-full border border-white/10 motion-safe:animate-ping"></div>
+        <div className="absolute left-[20%] bottom-[20%] h-40 w-40 rounded-full bg-emerald-500/20 blur-2xl opacity-20 motion-safe:animate-pulse"></div>
         <div
-          className="absolute inset-0 opacity-30"
+          className="absolute inset-0 opacity-20"
           style={{
             backgroundImage: "radial-gradient(circle at 1px 1px, #171717 1px, transparent 1px)",
-            backgroundSize: "24px 24px",
+            backgroundSize: "32px 32px",
           }}
         ></div>
       </div>
 
       <header className="sticky top-0 z-50">
         <div className="mx-auto max-w-7xl px-4">
-          <div className="mt-4 rounded-xl border border-white/10 bg-neutral-900/60 backdrop-blur supports-[backdrop-filter]:bg-neutral-900/50">
+          <div className="mt-4 rounded-xl border border-white/10 bg-black ">
             <div className="flex items-center justify-between px-4 py-3 md:px-6">
               <Link href="#" className="group inline-flex items-center gap-3">
                 <div className="flex h-8 w-8 items-center justify-center rounded-md border border-white/10 bg-white/5 text-white tracking-tight font-sans">
@@ -107,9 +145,6 @@ export default function Home() {
               <nav className="hidden md:flex items-center gap-8 text-sm text-neutral-400">
                 <a href="#features" className="hover:text-white transition-colors font-sans">
                   Features
-                </a>
-                <a href="#screenshot" className="hover:text-white transition-colors font-sans">
-                  Screenshot
                 </a>
                 <a href="#pricing" className="hover:text-white transition-colors font-sans">
                   Pricing
@@ -125,216 +160,247 @@ export default function Home() {
                 >
                   Sign In
                 </Link>
-                <Link
-                  href="/sign-up"
-                  className="inline-flex items-center rounded-lg bg-gradient-to-r from-violet-600 to-fuchsia-600 px-4 py-2 text-sm text-white hover:from-violet-500 hover:to-fuchsia-500 transition-colors shadow-[0_0_0_1px_rgba(255,255,255,0.06)] font-sans"
-                >
-                  Get Started
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
               </div>
             </div>
           </div>
         </div>
       </header>
 
-      <section className="relative">
-        <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 mx-auto mt-10 h-64 w-[90%] rounded-[2.5rem] blur-3xl bg-gradient-radial from-white/10 to-transparent"></div>
-
-        <div
-          className="max-w-7xl md:pt-24 md:pb-20 transition-all duration-700 ease-out will-change-transform opacity-100 mr-auto ml-auto pt-18 pr-4 pb-14 pl-4 translate-y-0"
-          data-reveal
-        >
-          <div className="mx-auto max-w-4xl text-center">
-            <div className="mx-auto mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs text-violet-200 font-sans">
-              <Star className="h-4 w-4" />
-              Trusted by 1000+ tutors in Bangladesh
-            </div>
-
-            <h1 className="text-3xl md:text-5xl lg:text-6xl font-semibold tracking-tight text-white leading-[1.08] font-sans">
-              Manage your{" "}
-              <span className="bg-gradient-to-b from-white to-neutral-300 bg-clip-text text-transparent font-sans">
-                tuitions
-              </span>{" "}
-              like a pro
-            </h1>
-
-            <p className="mt-5 text-base md:text-lg text-neutral-400 font-sans">
-              Track students, manage attendance, record daily logs, and handle fees — all in one beautiful, mobile‑first
-              workspace.
-            </p>
-
-            <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <Link
-                href="/sign-up"
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-6 py-3 text-base text-white hover:from-violet-500 hover:to-fuchsia-500 shadow-[0_8px_30px_rgba(88,28,135,0.35)] transition-all font-sans"
-              >
-                Get Started Free
-                <ArrowRight className="h-5 w-5" />
-              </Link>
-              <Link
-                href="/sign-in"
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/0 px-6 py-3 text-base text-neutral-200 hover:text-white hover:border-white/20 hover:bg-white/5 transition-all font-sans"
-              >
-                Sign In
-              </Link>
-            </div>
-
-            <div className="mt-7 flex flex-wrap items-center justify-center gap-5 text-xs text-neutral-400">
-              <span className="inline-flex items-center gap-2 font-sans">
-                <CheckCircle className="h-4 w-4 text-emerald-400" />
-                Free to start
-              </span>
-              <span className="inline-flex items-center gap-2 font-sans">
-                <CheckCircle className="h-4 w-4 text-emerald-400" />
-                No credit card required
-              </span>
-              <span className="inline-flex items-center gap-2 font-sans">
-                <CheckCircle className="h-4 w-4 text-emerald-400" />
-                Mobile‑first design
-              </span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="screenshot" className="relative">
-        <div className="mx-auto max-w-9xl px-4 pb-10">
-          <div className="mx-auto max-w-6xl">
-            <div
-              className="mb-6 flex items-end justify-between transition-all duration-700 ease-out will-change-transform opacity-100 translate-y-0"
-              data-reveal
-            >
-              <div>
-                <h2 className="text-2xl md:text-3xl font-semibold tracking-tight text-white font-sans">
-                  See your workspace at a glance
-                </h2>
-                <p className="mt-2 text-sm md:text-base text-neutral-400 font-sans">
-                  A clean, focused view of your students, classes, attendance, logs, and fees.
-                </p>
-              </div>
-              <div className="hidden md:flex items-center gap-2 text-xs text-neutral-400">
-                <span className="inline-flex items-center gap-1 font-sans">
-                  <MousePointer className="h-3.5 w-3.5" />
-                  Hover to preview
-                </span>
-              </div>
-            </div>
-
-            <div
-              className="group relative rounded-2xl border border-white/10 bg-neutral-900/60 p-3 backdrop-blur transition-all hover:border-white/20 duration-700 ease-out will-change-transform opacity-100 translate-y-0"
-              data-reveal
-            >
-              <div className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100 bg-gradient-radial from-violet-500/12 via-transparent to-pink-500/12"></div>
-
-              <div className="flex items-center justify-between rounded-t-xl border border-white/10 bg-neutral-950/60 px-4 py-2">
-                <div className="flex items-center gap-2">
-                  <span className="h-2.5 w-2.5 rounded-full bg-red-500"></span>
-                  <span className="h-2.5 w-2.5 rounded-full bg-yellow-500"></span>
-                  <span className="h-2.5 w-2.5 rounded-full bg-green-500"></span>
-                </div>
-                <div className="mx-4 flex-1">
-                  <div className="mx-auto max-w-xl rounded-md border border-white/10 bg-white/5 px-3 py-1 text-center text-[11px] text-neutral-400 font-sans">
-                    app.tuitiontrack.io/dashboard
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 text-neutral-400">
-                  <RefreshCw className="h-4 w-4" />
-                  <Share className="h-4 w-4" />
-                </div>
-              </div>
-
-              <div className="relative overflow-hidden rounded-b-xl border-x border-b border-white/10 bg-neutral-950">
-                <div
-                  className="pointer-events-none absolute inset-0 opacity-[.06]"
-                  style={{
-                    backgroundImage:
-                      "linear-gradient(to right, rgba(255,255,255,.8) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,.8) 1px, transparent 1px)",
-                    backgroundSize: "32px 32px",
+      <main className="overflow-hidden">
+        <section>
+          <div className="relative pt-7">
+            <div className="absolute inset-0 -z-10 size-full [background:radial-gradient(125%_125%_at_50%_100%,transparent_0%,var(--background)_75%)]"></div>
+            <div className="mx-auto max-w-5xl px-6">
+              <div className="sm:mx-auto lg:mr-auto">
+                <AnimatedGroup
+                  variants={{
+                    container: {
+                      visible: {
+                        transition: {
+                          staggerChildren: 0.05,
+                          delayChildren: 0.75,
+                        },
+                      },
+                    },
+                    ...transitionVariants,
                   }}
-                ></div>
-                <div className="relative">
-                  <div className="aspect-[16/9] w-full origin-center transform-gpu transition-all duration-700 ease-out group-hover:scale-[1.01] group-hover:[transform:perspective(2000px)_rotateX(1.5deg)_rotateY(-2deg)]">
-                    <img
-                      src="/dark-ss2.png"
-                      alt="App screenshot"
-                      className="h-full w-full object-cover [mask-image:linear-gradient(to_bottom,black_90%,transparent_100%)]"
-                    />
+                >
+                  {/* <div className="mx-auto mb-2 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs text-violet-200 font-sans backdrop-blur">
+                    <Star className="h-4 w-4" />
+                    Trusted by 1000+ tutors in Bangladesh
+                  </div> */}
+
+                  <h1 className="mt-8 max-w-2xl text-balance text-4xl md:text-4xl lg:text-4xl font-bold tracking-tight text-white leading-[1.05] font-sans">
+                    The smart way to{" "}
+                    <span className="bg-gradient-to-r from-violet-400 via-pink-400 to-orange-400 bg-clip-text text-transparent animate-pulse font-sans">
+                     organaize
+                    </span>{" "}
+                    your tuition hustle
+                  </h1>
+
+                  <p className="mt-8 max-w-2xl text-pretty text-md text-neutral-300 font-sans leading-relaxed">
+                    Transform chaos into clarity. Track students, manage attendance, handle fees, and grow your tuition
+                    empire — all from one beautiful dashboard.
+                  </p>
+
+                 <div className="flex flex-col sm:flex-row gap-4 mt-7">
+              <Link
+                  href="/sign-in"
+                  className="group relative inline-flex items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 px-6 py-2 text-base font-semibold text-white shadow-xl shadow-orange-500/25 transition-all duration-300 hover:shadow-orange-500/40 hover:scale-[1.02] font-sans"
+                >
+                  Get started for free
+                  <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+                </Link>
+               
+              </div>
+
+                  <div className="mt-8 flex flex-wrap items-center justify-start gap-6 text-sm text-neutral-400">
+                    <span className="inline-flex items-center gap-2 font-sans">
+                      <CheckCircle className="h-4 w-4 text-emerald-400" />
+                      30-day free trial
+                    </span>
+                    <span className="inline-flex items-center gap-2 font-sans">
+                      <CheckCircle className="h-4 w-4 text-emerald-400" />
+                      No credit card required
+                    </span>
+                    <span className="inline-flex items-center gap-2 font-sans">
+                      <CheckCircle className="h-4 w-4 text-emerald-400" />
+                      Mobile‑first design
+                    </span>
                   </div>
-                  <div className="pointer-events-none absolute bottom-3 right-3 rounded-lg border border-white/10 bg-neutral-900/70 px-3 py-2 text-[11px] text-neutral-300 backdrop-blur transition-opacity duration-500 opacity-0 group-hover:opacity-100 font-sans">
-                    TuitionTrack Dashboard Preview
+                </AnimatedGroup>
+              </div>
+            </div>
+
+            <AnimatedGroup
+              variants={{
+                container: {
+                  visible: {
+                    transition: {
+                      staggerChildren: 0.05,
+                      delayChildren: 1.2,
+                    },
+                  },
+                },
+                ...transitionVariants,
+              }}
+            >
+              <div className="relative -mr-56 mt-8 overflow-hidden px-2 sm:mr-0 sm:mt-12 md:mt-20">
+                <div
+                  aria-hidden
+                  className="bg-gradient-to-b to-neutral-950 absolute inset-0 z-10 from-transparent from-35%"
+                />
+                <div className="relative mx-auto max-w-5xl overflow-hidden rounded-2xl border border-white/20 bg-gradient-to-br from-violet-900/40 via-purple-900/30 to-pink-900/40 backdrop-blur p-4 shadow-lg shadow-zinc-950/15 ring-1 ring-white/10">
+                  <div className="flex items-center justify-between border-b border-white/10 bg-black/20 px-4 py-3 rounded-t-xl">
+                    <div className="flex items-center gap-2">
+                      <span className="h-3 w-3 rounded-full bg-red-500"></span>
+                      <span className="h-3 w-3 rounded-full bg-yellow-500"></span>
+                      <span className="h-3 w-3 rounded-full bg-green-500"></span>
+                    </div>
+                    <div className="mx-4 flex-1">
+                      <div className="mx-auto max-w-sm rounded-md border border-white/10 bg-white/5 px-3 py-1 text-center text-xs text-neutral-300 font-sans">
+                        app.tuitiontrack.io/dashboard
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 text-neutral-400">
+                      <RefreshCw className="h-4 w-4" />
+                      <Share className="h-4 w-4" />
+                    </div>
+                  </div>
+                  <div className="relative h-[200px] md:h-[300px] overflow-hidden rounded-b-xl">
+                    <div className="absolute inset-0 bg-gradient-to-br from-violet-500/20 via-purple-500/10 to-pink-500/20"></div>
+                    <img
+                      src="/dark-ss2.png?height=600&width=1200"
+                      alt="TuitionTrack Dashboard Preview"
+                      className="h-full w-full object-cover object-top [mask-image:linear-gradient(to_bottom,black_80%,transparent_100%)]"
+                    />
+                    <div className="absolute bottom-4 right-4 rounded-lg border border-white/20 bg-black/40 px-3 py-2 text-xs text-white backdrop-blur font-sans">
+                      Live Dashboard Preview
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </AnimatedGroup>
+          </div>
+        </section>
+      </main>
+
+      <section className="relative py-20">
+        <div className="mx-auto max-w-7xl px-4">
+          <div
+            className="mx-auto max-w-3xl text-center mb-16 transition-all duration-700 ease-out will-change-transform opacity-100 translate-y-0"
+            data-reveal
+          >
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white font-sans mb-4">
+              Everything you need to{" "}
+              <span className="bg-gradient-to-r from-orange-400 to-pink-400 bg-clip-text text-transparent">
+                scale your tuitions
+              </span>
+            </h2>
+            <p className="text-lg text-neutral-400 font-sans">
+              Powerful automation meets intuitive design. Built specifically for tutors who want to focus on teaching,
+              not paperwork.
+            </p>
+          </div>
+
+          <div
+            className="grid grid-cols-1 md:grid-cols-3 gap-6 transition-all duration-700 ease-out will-change-transform opacity-100 translate-y-0"
+            data-reveal
+          >
+            {/* Large card - Student Management */}
+            <div className="md:col-span-2 group relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-violet-500/5 to-purple-500/5 p-8 transition-all hover:border-violet-400/40 hover:shadow-[0_0_80px_-12px_rgba(139,92,246,0.4)]">
+              <div className="absolute -right-20 -top-20 h-60 w-60 rounded-full bg-violet-500/20 blur-3xl opacity-30 group-hover:opacity-50 transition-opacity"></div>
+              <div className="relative">
+                <div className="flex items-center gap-4 mb-6">
+                  {/* <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-violet-500/10 text-violet-300 border border-violet-500/20">
+                    <Users className="h-7 w-7" />
+                  </div> */}
+                  <div>
+                    <h3 className="text-xl font-semibold text-white font-sans">Smart Student Management</h3>
+                    <p className="text-sm text-neutral-400 font-sans">
+                      Track progress, manage profiles, and stay organized
+                    </p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="rounded-xl border border-white/10 bg-neutral-900/40 p-4 backdrop-blur">
+                    <div className="flex items-center gap-2 mb-2">
+                      <GraduationCap className="h-4 w-4 text-violet-400" />
+                      <span className="text-sm font-medium text-white">Active Students</span>
+                    </div>
+                    <div className="text-2xl font-bold text-white">247</div>
+                  </div>
+                  <div className="rounded-xl border border-white/10 bg-neutral-900/40 p-4 backdrop-blur">
+                    <div className="flex items-center gap-2 mb-2">
+                      {/* <TrendingUp className="h-4 w-4 text-emerald-400" /> */}
+                      <span className="text-sm font-medium text-white">This Month</span>
+                    </div>
+                    <div className="text-2xl font-bold text-emerald-400">+23</div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div
-              className="mt-6 grid grid-cols-6 grid-rows-6 gap-4 transition-all duration-700 ease-out will-change-transform opacity-100 translate-y-0"
-              data-reveal
-            >
-              <div className="group col-span-6 md:col-span-3 row-span-3 relative overflow-hidden transition-all hover:border-violet-400/40 hover:shadow-[0_0_60px_-8px_rgba(139,92,246,.45)] border-white/10 border rounded-2xl pt-5 pr-5 pb-5 pl-5">
-                <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-violet-500/20 blur-2xl opacity-20 group-hover:opacity-30 transition-opacity"></div>
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-500/10 text-violet-300">
-                    <Calendar className="h-6 w-6" />
-                  </div>
-                  <div>
-                    <p className="text-base font-medium text-white tracking-tight font-sans">Attendance & Schedules</p>
-                    <p className="text-xs text-neutral-400 font-sans">Visual timeline to keep classes on track.</p>
-                  </div>
-                </div>
-                <div className="mt-4 h-[140px] rounded-xl border border-white/10 bg-neutral-900/60"></div>
-              </div>
-
-              <div className="group col-span-6 md:col-span-3 row-span-2 rounded-2xl border border-white/10 bg-white/[0.03] p-5 relative overflow-hidden transition-all hover:border-emerald-400/40 hover:shadow-[0_0_60px_-8px_rgba(16,185,129,.45)]">
-                <div className="absolute -left-10 -bottom-10 h-36 w-36 rounded-full bg-emerald-500/20 blur-2xl opacity-20 group-hover:opacity-30 transition-opacity"></div>
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-300">
-                    <BookOpen className="h-6 w-6" />
-                  </div>
-                  <div>
-                    <p className="text-base font-medium text-white tracking-tight font-sans">Daily Logs</p>
-                    <p className="text-xs text-neutral-400 font-sans">Record work, homework, and exam notes.</p>
-                  </div>
-                </div>
-                <div className="mt-4 h-[88px] rounded-xl border border-white/10 bg-neutral-900/60"></div>
-              </div>
-
-              <div className="group col-span-3 md:col-span-2 row-span-2 rounded-2xl border border-white/10 bg-white/[0.03] p-5 relative overflow-hidden transition-all hover:border-pink-400/40 hover:shadow-[0_0_60px_-8px_rgba(244,114,182,.45)]">
-                <div className="absolute right-0 top-0 h-28 w-28 translate-x-6 -translate-y-6 rounded-full bg-pink-500/20 blur-2xl opacity-20 group-hover:opacity-30 transition-opacity"></div>
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-pink-500/10 text-pink-300">
-                    <DollarSign className="h-6 w-6" />
-                  </div>
-                  <div>
-                    <p className="text-base font-medium text-white tracking-tight font-sans">Fees & Receipts</p>
-                    <p className="text-xs text-neutral-400 font-sans">Track payments with instant receipts.</p>
-                  </div>
+            {/* Attendance card */}
+            <div className="group relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-emerald-500/5 to-teal-500/5 p-8 transition-all hover:border-emerald-400/40 hover:shadow-[0_0_80px_-12px_rgba(16,185,129,0.4)]">
+              <div className="absolute -left-10 -bottom-10 h-40 w-40 rounded-full bg-emerald-500/20 blur-2xl opacity-30 group-hover:opacity-50 transition-opacity"></div>
+              <div className="relative">
+                {/* <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 mb-4">
+                  <Calendar className="h-7 w-7" />
+                </div> */}
+                <h3 className="text-xl font-semibold text-white font-sans mb-2">Smart Attendance</h3>
+                <p className="text-sm text-neutral-400 font-sans mb-4">One-tap attendance with visual calendar</p>
+                <div className="rounded-xl border border-white/10 bg-neutral-900/40 p-3 backdrop-blur">
+                  <div className="text-xs text-neutral-400 mb-1">Today's Rate</div>
+                  <div className="text-lg font-bold text-emerald-400">94.2%</div>
                 </div>
               </div>
+            </div>
 
-              <div className="group col-span-3 md:col-span-2 row-span-2 rounded-2xl border border-white/10 bg-white/[0.03] p-5 relative overflow-hidden transition-all hover:border-sky-400/40 hover:shadow-[0_0_60px_-8px_rgba(56,189,248,.45)]">
-                <div className="absolute left-0 top-0 h-28 w-28 -translate-x-6 -translate-y-6 rounded-full bg-sky-500/20 blur-2xl opacity-20 group-hover:opacity-30 transition-opacity"></div>
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-500/10 text-sky-300">
-                    <Users className="h-6 w-6" />
-                  </div>
-                  <div>
-                    <p className="text-base font-medium text-white tracking-tight font-sans">Student Tracking</p>
-                    <p className="text-xs text-neutral-400 font-sans">Keep records and progress effortlessly.</p>
-                  </div>
+            {/* Fee Management */}
+            <div className="group relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-pink-500/5 to-rose-500/5 p-8 transition-all hover:border-pink-400/40 hover:shadow-[0_0_80px_-12px_rgba(244,114,182,0.4)]">
+              <div className="absolute right-0 top-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-pink-500/20 blur-2xl opacity-30 group-hover:opacity-50 transition-opacity"></div>
+              <div className="relative">
+                {/* <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-pink-500/10 text-pink-300 border border-pink-500/20 mb-4">
+                  <DollarSign className="h-7 w-7" />
+                </div> */}
+                <h3 className="text-xl font-semibold text-white font-sans mb-2">Fee Automation</h3>
+                <p className="text-sm text-neutral-400 font-sans mb-4">Automated billing with bKash integration</p>
+                <div className="rounded-xl border border-white/10 bg-neutral-900/40 p-3 backdrop-blur">
+                  <div className="text-xs text-neutral-400 mb-1">This Month</div>
+                  <div className="text-lg font-bold text-pink-400">৳45,200</div>
                 </div>
               </div>
+            </div>
 
-              <div className="group col-span-6 md:col-span-2 row-span-2 rounded-2xl border border-white/10 bg-white/[0.03] p-5 relative overflow-hidden transition-all hover:border-rose-400/40 hover:shadow-[0_0_60px_-8px_rgba(244,63,94,.45)]">
-                <div className="absolute left-1/2 top-1/2 h-24 w-24 -translate-x-1/2 -translate-y-1/2 rounded-full bg-rose-500/20 blur-2xl opacity-20 group-hover:opacity-30 transition-opacity"></div>
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-500/10 text-rose-300">
-                    <Users className="h-6 w-6" />
-                  </div>
+            {/* Analytics */}
+            <div className="md:col-span-2 group relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-orange-500/5 to-yellow-500/5 p-8 transition-all hover:border-orange-400/40 hover:shadow-[0_0_80px_-12px_rgba(249,115,22,0.4)]">
+              <div className="absolute left-1/2 top-1/2 h-48 w-48 -translate-x-1/2 -translate-y-1/2 rounded-full bg-orange-500/20 blur-3xl opacity-30 group-hover:opacity-50 transition-opacity"></div>
+              <div className="relative">
+                <div className="flex items-center gap-4 mb-6">
+                  {/* <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-500/10 text-orange-300 border border-orange-500/20">
+                    <Target className="h-7 w-7" />
+                  </div> */}
                   <div>
-                    <p className="text-base font-medium text-white tracking-tight font-sans">Parent Updates</p>
-                    <p className="text-xs text-neutral-400 font-sans">Share progress and notes instantly.</p>
+                    <h3 className="text-xl font-semibold text-white font-sans">Performance Analytics</h3>
+                    <p className="text-sm text-neutral-400 font-sans">Deep insights into your tuition business</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-3 gap-4">
+                  <div className="rounded-xl border border-white/10 bg-neutral-900/40 p-4 backdrop-blur text-center">
+                    <Shield className="h-5 w-5 text-blue-400 mx-auto mb-2" />
+                    <div className="text-lg font-bold text-white">98%</div>
+                    <div className="text-xs text-neutral-400">Retention</div>
+                  </div>
+                  <div className="rounded-xl border border-white/10 bg-neutral-900/40 p-4 backdrop-blur text-center">
+                    <Zap className="h-5 w-5 text-yellow-400 mx-auto mb-2" />
+                    <div className="text-lg font-bold text-white">4.9</div>
+                    <div className="text-xs text-neutral-400">Rating</div>
+                  </div>
+                  <div className="rounded-xl border border-white/10 bg-neutral-900/40 p-4 backdrop-blur text-center">
+                    <Award className="h-5 w-5 text-purple-400 mx-auto mb-2" />
+                    <div className="text-lg font-bold text-white">12</div>
+                    <div className="text-xs text-neutral-400">Awards</div>
                   </div>
                 </div>
               </div>
@@ -344,199 +410,102 @@ export default function Home() {
       </section>
 
       <div
-        className="mx-auto my-8 max-w-7xl px-4 transition-all duration-700 ease-out will-change-transform opacity-100 translate-y-0"
+        className="mx-auto my-16 max-w-7xl px-4 transition-all duration-700 ease-out will-change-transform opacity-100 translate-y-0"
         data-reveal
       >
-        <div className="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+        <div className="h-px w-full bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
       </div>
 
-      <section id="features" className="relative">
-        <div className="mx-auto max-w-7xl px-4 py-12 md:py-16">
-          <div
-            className="mx-auto max-w-3xl text-center transition-all duration-700 ease-out will-change-transform opacity-100 translate-y-0"
-            data-reveal
-          >
-            <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-white font-sans">
-              Everything you need to manage your tuitions
-            </h2>
-            <p className="mt-3 text-neutral-400 font-sans">
-              Powerful features designed specifically for tutors in Bangladesh.
+      <section id="pricing" className="py-16 md:py-32">
+        <div className="mx-auto max-w-5xl px-6">
+          <div className="mx-auto max-w-2xl space-y-6 text-center">
+            <h1 className="text-center text-4xl font-semibold lg:text-4xl text-white font-sans">
+              Pricing that Scales with You
+            </h1>
+            <p className="text-neutral-300 font-sans">
+              TuitionTrack is evolving to be more than just management. It supports your entire tuition business helping
+              you grow and innovate.
             </p>
           </div>
 
-          <div
-            className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 transition-all duration-700 ease-out will-change-transform opacity-100 translate-y-0"
-            data-reveal
-          >
-            <div className="group rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition-colors hover:border-white/20">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-violet-500/10 text-violet-300">
-                <BookOpen className="h-6 w-6" />
-              </div>
-              <h3 className="mt-4 text-lg font-semibold tracking-tight text-white font-sans">Tuition Management</h3>
-              <p className="mt-2 text-sm text-neutral-400 font-sans">
-                Organize tuitions, subjects, and teaching schedules in one place.
-              </p>
-            </div>
-
-            <div className="group rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition-colors hover:border-white/20">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-sky-500/10 text-sky-300">
-                <Users className="h-6 w-6" />
-              </div>
-              <h3 className="mt-4 text-lg font-semibold tracking-tight text-white font-sans">Student Tracking</h3>
-              <p className="mt-2 text-sm text-neutral-400 font-sans">
-                Keep detailed records and track academic progress effortlessly.
-              </p>
-            </div>
-
-            <div className="group rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition-colors hover:border-white/20">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-300">
-                <Calendar className="h-6 w-6" />
-              </div>
-              <h3 className="mt-4 text-lg font-semibold tracking-tight text-white font-sans">Daily Logs</h3>
-              <p className="mt-2 text-sm text-neutral-400 font-sans">
-                Record daily activities, homework, and upcoming exams.
-              </p>
-            </div>
-
-            <div className="group rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition-colors hover:border-white/20">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-pink-500/10 text-pink-300">
-                <DollarSign className="h-6 w-6" />
-              </div>
-              <h3 className="mt-4 text-lg font-semibold tracking-tight text-white font-sans">Fee Management</h3>
-              <p className="mt-2 text-sm text-neutral-400 font-sans">
-                Track payments, generate receipts, and manage fee collection.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="pricing" className="relative">
-        <div
-          className="mx-auto max-w-7xl px-4 py-12 md:py-16 transition-all duration-700 ease-out will-change-transform opacity-100 translate-y-0"
-          data-reveal
-        >
-          <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white text-neutral-900">
-            <div className="absolute inset-0 opacity-[0.06] pointer-events-none bg-gradient-radial from-violet-600/20 via-transparent to-pink-600/20"></div>
-
-            <div className="relative px-6 py-12 md:px-12 md:py-16">
-              <div className="mx-auto max-w-3xl text-center">
-                <h2 className="text-3xl md:text-4xl font-semibold tracking-tight font-sans">
-                  Simple, transparent pricing
-                </h2>
-                <p className="mt-3 text-neutral-600 font-sans">
-                  Start free for 30 days. Continue for only ৳20/month via bKash.
-                </p>
-              </div>
-
-              <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2">
-                <div className="group relative rounded-2xl border border-neutral-200 bg-white p-6 transition-all hover:shadow-[0_12px_50px_-12px_rgba(0,0,0,0.15)]">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold tracking-tight text-neutral-900 font-sans">Free Trial</h3>
-                    <span className="inline-flex items-center gap-1 rounded-full border border-neutral-200 bg-neutral-50 px-2.5 py-1 text-xs text-neutral-600 font-sans">
-                      <Clock className="h-3.5 w-3.5" />
-                      30 days
-                    </span>
-                  </div>
-                  <div className="mt-4">
-                    <div className="flex items-end gap-1">
-                      <span className="text-4xl font-semibold tracking-tight text-neutral-900 font-sans">৳0</span>
-                      <span className="pb-1 text-sm text-neutral-500 font-sans">for 30 days</span>
-                    </div>
-                    <ul className="mt-4 space-y-2 text-sm text-neutral-600">
-                      <li className="inline-flex items-center gap-2 font-sans">
-                        <CheckCircle className="h-4 w-4 text-emerald-500" />
-                        All core features
-                      </li>
-                      <li className="inline-flex items-center gap-2 font-sans">
-                        <CheckCircle className="h-4 w-4 text-emerald-500" />
-                        Unlimited students
-                      </li>
-                      <li className="inline-flex items-center gap-2 font-sans">
-                        <CheckCircle className="h-4 w-4 text-emerald-500" />
-                        Mobile access
-                      </li>
-                    </ul>
-                  </div>
-                  <div className="mt-6">
-                    <Link
-                      href="/sign-up"
-                      className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-neutral-900 px-5 py-3 text-sm text-white hover:bg-neutral-800 transition-colors font-sans"
-                    >
-                      Start 30‑day Free Trial
-                      <ArrowRight className="h-4 w-4" />
-                    </Link>
-                  </div>
+          <div className="mt-8 grid gap-6 md:mt-20 md:grid-cols-5 md:gap-0">
+            <div className="rounded-2xl flex flex-col justify-between space-y-8 border border-white/10 bg-gradient-to-br from-violet-300 via-violet-50/80 to-white text-neutral-900 p-6 md:col-span-2 md:my-2 md:rounded-r-none md:border-r-0 lg:p-10">
+              <div className="space-y-4">
+                <div>
+                  <h2 className="font-medium text-xl">Free Trial</h2>
+                  <span className="my-3 block text-2xl font-semibold">৳0 / month</span>
+                  <p className="text-neutral-600 text-sm">30-day trial period</p>
                 </div>
 
-                <div className="group relative rounded-2xl border border-neutral-200 bg-white p-6 transition-all hover:shadow-[0_12px_50px_-12px_rgba(0,0,0,0.15)]">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold tracking-tight text-neutral-900 font-sans">Standard</h3>
-                    <span className="inline-flex items-center gap-1 rounded-full border border-neutral-200 bg-neutral-50 px-2.5 py-1 text-xs text-neutral-600 font-sans">
-                      <Smartphone className="h-3.5 w-3.5" />
-                      bKash
-                    </span>
-                  </div>
-                  <div className="mt-4">
-                    <div className="flex items-end gap-1">
-                      <span className="text-4xl font-semibold tracking-tight text-neutral-900 font-sans">৳20</span>
-                      <span className="pb-1 text-sm text-neutral-500 font-sans">per month</span>
-                    </div>
-                    <ul className="mt-4 space-y-2 text-sm text-neutral-600">
-                      <li className="inline-flex items-center gap-2 font-sans">
-                        <CheckCircle className="h-4 w-4 text-emerald-500" />
-                        Everything in Free
-                      </li>
-                      <li className="inline-flex items-center gap-2 font-sans">
-                        <CheckCircle className="h-4 w-4 text-emerald-500" />
-                        Priority support
-                      </li>
-                      <li className="inline-flex items-center gap-2 font-sans">
-                        <CheckCircle className="h-4 w-4 text-emerald-500" />
-                        Auto‑renew via bKash
-                      </li>
-                    </ul>
-                  </div>
-                  <div className="mt-6 flex flex-col gap-2">
-                    <Link
-                      href="/sign-up"
-                      className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-violet-600 px-5 py-3 text-sm text-white hover:bg-violet-500 transition-colors font-sans"
-                    >
-                      Subscribe — ৳20/month
-                      <ArrowRight className="h-4 w-4" />
-                    </Link>
-                    <p className="text-xs text-neutral-500 text-center font-sans">After your 30‑day free trial ends.</p>
-                  </div>
-                </div>
-              </div>
+                <Button
+                  asChild
+                  variant="outline"
+                  className="w-full border-neutral-300 text-neutral-900 hover:bg-neutral-50 bg-transparent"
+                >
+                  <Link href="/sign-up">Start Free Trial</Link>
+                </Button>
 
-              <div className="mt-10">
-                <div className="relative overflow-hidden rounded-2xl border border-neutral-200 bg-white p-6 md:p-8">
-                  <div className="absolute inset-0 pointer-events-none opacity-10 bg-gradient-radial from-violet-600/30 via-transparent to-pink-600/30"></div>
-                  <div className="relative flex flex-col items-center text-center">
-                    <h3 className="text-2xl md:text-3xl font-semibold tracking-tight text-neutral-900 font-sans">
-                      Start your free 30‑day trial today
-                    </h3>
-                    <p className="mt-2 max-w-2xl text-sm md:text-base text-neutral-600 font-sans">
-                      Try everything with no commitment. Continue for only ৳20/month via bKash after your trial.
-                    </p>
-                    <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row">
-                      <Link
-                        href="/sign-up"
-                        className="inline-flex items-center justify-center gap-2 rounded-xl bg-neutral-900 px-6 py-3 text-sm text-white hover:bg-neutral-800 transition-colors font-sans"
-                      >
-                        Get Started Free
-                        <ArrowRight className="h-4 w-4" />
-                      </Link>
-                      <a
-                        href="#"
-                        className="inline-flex items-center justify-center gap-2 rounded-xl border border-neutral-200 bg-white px-6 py-3 text-sm text-neutral-900 hover:bg-neutral-50 transition-colors font-sans"
-                      >
-                        How to pay with bKash
-                        <HelpCircle className="h-4 w-4" />
-                      </a>
-                    </div>
+                <hr className="border-dashed border-neutral-300" />
+
+                <ul className="list-outside space-y-3 text-sm text-neutral-700">
+                  {[
+                    "Up to 50 Students",
+                    "Basic Attendance Tracking",
+                    "Fee Management",
+                    "Mobile App Access",
+                    "Email Support",
+                  ].map((item, index) => (
+                    <li key={index} className="flex items-center gap-2">
+                      <Check className="size-3 text-emerald-600" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-orange-300 to-white text-neutral-900 p-6 shadow-lg shadow-gray-950/5 md:col-span-3 lg:p-10 relative overflow-hidden">
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+               
+              </div>
+              <div className="grid gap-6 sm:grid-cols-2">
+                <div className="space-y-4">
+                  <div>
+                    <h2 className="font-medium text-xl">Standard</h2>
+                    <span className="my-3 block text-2xl font-semibold">৳20 / month</span>
+                    <p className="text-neutral-600 text-sm">Via bKash payment</p>
                   </div>
+
+                  <Button
+                    asChild
+                    className="w-full bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500"
+                  >
+                    <Link href="/sign-up">Get Started</Link>
+                  </Button>
+                </div>
+
+                <div>
+                  <div className="text-sm font-medium text-neutral-800 mb-4">Everything in free plus:</div>
+
+                  <ul className="list-outside space-y-3 text-sm text-neutral-700">
+                    {[
+                      "Unlimited Students & Tuitions",
+                      "Advanced Analytics Dashboard",
+                      "Automated Fee Reminders",
+                      "bKash Payment Integration",
+                      "Bulk SMS Notifications",
+                      "Student Progress Reports",
+                      "Attendance Calendar View",
+                      "Priority Customer Support",
+                      "Data Export & Backup",
+                      "Custom Branding Options",
+                    ].map((item, index) => (
+                      <li key={index} className="flex items-center gap-2">
+                        <Check className="size-3 text-emerald-600" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </div>
             </div>
@@ -548,7 +517,7 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-4 py-14">
           <div className="relative">
             <div className="sticky top-20 z-0 mx-auto mb-10 flex h-40 items-center justify-center opacity-[0.06]">
-              <span className="select-none text-[16vw] leading-none font-semibold tracking-tight bg-gradient-to-b from-white to-neutral-400 bg-clip-text text-transparent font-sans">
+              <span className="select-none text-[16vw] leading-none font-semibold tracking-tight bg-gradient-to-b from-white to-neutral-400 bg-clip-text text-transparent font-sans hover:from-violet-500 hover:to-orange-400 transition-colors">
                 TUITIONTRACK
               </span>
             </div>
@@ -586,264 +555,3 @@ export default function Home() {
     </div>
   )
 }
-
-
-
-
-
-
-
-
-
-
-
-// "use client";
-
-// import { useUser } from "@clerk/nextjs";
-// import { useEffect } from "react";
-// import { redirect } from "next/navigation";
-// import { Button } from "@/components/ui/button";
-// import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-// import { BookOpen, Users, Calendar, DollarSign, ArrowRight } from "lucide-react";
-// import Link from "next/link";
-// import { useUserSync } from "./hooks/useUserSync";
-
-
-// export default function Home() {
-//   const { user, isLoaded } = useUserSync();
-
-//   useEffect(() => {
-//     if (isLoaded && user) {
-//       redirect('/dashboard');
-//     }
-//   }, [isLoaded, user]);
-
-//   if (!isLoaded) {
-//     return (
-//       <div className="min-h-screen bg-background flex items-center justify-center">
-//         <div className="animate-pulse text-muted-foreground">Loading...</div>
-//       </div>
-//     );
-//   }
-
-//   return (
-//     <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-accent/5">
-//       {/* Hero Section */}
-//       <section className="container mx-auto px-4 pt-20 pb-16">
-//         <div className="text-center max-w-4xl mx-auto">
-//           <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6">
-//             Manage Your <span className="text-primary">Tuitions</span> Like a Pro
-//           </h1>
-//           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-//             Track students, manage attendance, record daily logs, and handle fees - all in one beautiful, mobile-first platform designed for tutors in Bangladesh.
-//           </p>
-//           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-//             <Link href="/sign-up">
-//               <Button size="lg" className="text-lg px-8 py-4">
-//                 Get Started Free
-//                 <ArrowRight className="ml-2 h-5 w-5" />
-//               </Button>
-//             </Link>
-//             <Link href="/sign-in">
-//               <Button variant="outline" size="lg" className="text-lg px-8 py-4">
-//                 Sign In
-//               </Button>
-//             </Link>
-//           </div>
-//         </div>
-//       </section>
-
-//       {/* Features Section */}
-//       <section className="container mx-auto px-4 py-16">
-//         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-//           <Card className="text-center hover:shadow-lg transition-shadow">
-//             <CardHeader>
-//               <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
-//                 <BookOpen className="h-6 w-6 text-primary" />
-//               </div>
-//               <CardTitle>Tuition Management</CardTitle>
-//             </CardHeader>
-//             <CardContent>
-//               <p className="text-muted-foreground">
-//                 Organize your tuitions, subjects, and teaching schedules in one place.
-//               </p>
-//             </CardContent>
-//           </Card>
-
-//           <Card className="text-center hover:shadow-lg transition-shadow">
-//             <CardHeader>
-//               <div className="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center mx-auto mb-4">
-//                 <Users className="h-6 w-6 text-blue-500" />
-//               </div>
-//               <CardTitle>Student Tracking</CardTitle>
-//             </CardHeader>
-//             <CardContent>
-//               <p className="text-muted-foreground">
-//                 Keep detailed records of all your students and their progress.
-//               </p>
-//             </CardContent>
-//           </Card>
-
-//           <Card className="text-center hover:shadow-lg transition-shadow">
-//             <CardHeader>
-//               <div className="w-12 h-12 bg-green-500/10 rounded-lg flex items-center justify-center mx-auto mb-4">
-//                 <Calendar className="h-6 w-6 text-green-500" />
-//               </div>
-//               <CardTitle>Daily Logs</CardTitle>
-//             </CardHeader>
-//             <CardContent>
-//               <p className="text-muted-foreground">
-//                 Record daily activities, homework, and upcoming exams effortlessly.
-//               </p>
-//             </CardContent>
-//           </Card>
-
-//           <Card className="text-center hover:shadow-lg transition-shadow">
-//             <CardHeader>
-//               <div className="w-12 h-12 bg-orange-500/10 rounded-lg flex items-center justify-center mx-auto mb-4">
-//                 <DollarSign className="h-6 w-6 text-orange-500" />
-//               </div>
-//               <CardTitle>Fee Management</CardTitle>
-//             </CardHeader>
-//             <CardContent>
-//               <p className="text-muted-foreground">
-//                 Track payments, generate receipts, and manage fee collection easily.
-//               </p>
-//             </CardContent>
-//           </Card>
-//         </div>
-//       </section>
-
-//       {/* CTA Section */}
-//       <section className="container mx-auto px-4 py-16">
-//         <Card className="bg-primary/5 border-primary/20">
-//           <CardContent className="text-center py-12">
-//             <h2 className="text-3xl font-bold text-foreground mb-4">
-//               Ready to Transform Your Tuition Management?
-//             </h2>
-//             <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
-//               Join thousands of tutors who have streamlined their teaching business with TuitionTrack. Start your free trial today!
-//             </p>
-//             <Link href="/sign-up">
-//               <Button size="lg" className="text-lg px-8 py-4">
-//                 Start Free Trial
-//                 <ArrowRight className="ml-2 h-5 w-5" />
-//               </Button>
-//             </Link>
-//           </CardContent>
-//         </Card>
-//       </section>
-//     </div>
-//   );
-
-
-
-
-
-
-
-
-
-// import Image from "next/image";
-
-// export default function Home() {
-//   return (
-//     <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-//       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-//         <Image
-//           className="dark:invert"
-//           src="/next.svg"
-//           alt="Next.js logo"
-//           width={180}
-//           height={38}
-//           priority
-//         />
-//         <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-//           <li className="mb-2 tracking-[-.01em]">
-//             Get started by editing{" "}
-//             <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-//               app/page.tsx
-//             </code>
-//             .
-//           </li>
-//           <li className="tracking-[-.01em]">
-//             Save and see your changes instantly.
-//           </li>
-//         </ol>
-
-//         <div className="flex gap-4 items-center flex-col sm:flex-row">
-//           <a
-//             className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-primary text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-//             href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-//             target="_blank"
-//             rel="noopener noreferrer"
-//           >
-//             <Image
-//               className="dark:invert"
-//               src="/vercel.svg"
-//               alt="Vercel logomark"
-//               width={20}
-//               height={20}
-//             />
-//             Deploy now
-//           </a>
-//           <a
-//             className="rounded-full border g- border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-//             href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-//             target="_blank"
-//             rel="noopener noreferrer"
-//           >
-//             Read our docs
-//           </a>
-//         </div>
-//       </main>
-//       <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-//         <a
-//           className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-//           href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           <Image
-//             aria-hidden
-//             src="/file.svg"
-//             alt="File icon"
-//             width={16}
-//             height={16}
-//           />
-//           Learn
-//         </a>
-//         <a
-//           className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-//           href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           <Image
-//             aria-hidden
-//             src="/window.svg"
-//             alt="Window icon"
-//             width={16}
-//             height={16}
-//           />
-//           Examples
-//         </a>
-//         <a
-//           className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-//           href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           <Image
-//             aria-hidden
-//             src="/globe.svg"
-//             alt="Globe icon"
-//             width={16}
-//             height={16}
-//           />
-//           Go to nextjs.org →
-//         </a>
-//       </footer>
-//     </div>
-//   );
-// }
